@@ -17,11 +17,15 @@ for(int i=1;i<=n;i++)
     fact*=i;
 }
 
+
+
 // Nth Fibonacci-DP
 for(int i=2;i<=n;i++)
 {
     dp[i]=dp[i-1]+dp[i-2];
 }
+
+
 
 //Kadanes Algorithm
 int currSum=0, ans=INT_MIN;
@@ -31,6 +35,8 @@ for(int i=0;i<n;i++)
     ans=max(currSum,ans);
     currSum=currSum<0?0:currSum;
 }
+
+
 
 
 
@@ -91,3 +97,31 @@ for(int i=0;i<n-1;i++)
     }
     swap(arr[i],arr[minIdx]);
 }
+
+
+
+
+
+int tar=10;
+
+for(int i=0;i<n;i++)
+{
+    if(arr[i]==tar)
+    {
+        return arr[i];
+    }
+
+}
+
+
+
+
+
+int sum=0;
+n=10;
+for(int i=0;i<n;i++)
+{
+    sum+=arr[i];
+    
+}
+cout<<sum;
