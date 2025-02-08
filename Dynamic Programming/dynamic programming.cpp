@@ -371,6 +371,59 @@ Arr[] : 1,1,2,3
 diff: 1
 Output: 3 . 
 
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int CountSubsetsWithSum(int arr[], int n, int sum) {
+	int t[n + 1][sum + 1]; // DP - matrix
+	// initialization 
+  // here we are setting 1st row and 1st column 
+  // i denotes the size of the array 
+  // j denotes the target sum (subset sum)
+	for (int i = 0; i <= n; i++) {
+		for (int j = 0; j <= sum; j++) {
+			if (i == 0) // when array(i) is empty than there is no meaning of sum of elements so return count of subset as 0;
+				t[i][j] = 0;
+			if (j == 0) // when sum(j) is zero and there is always a chance of empty subset so return count as 1;
+				t[i][j] = 1;
+		}
+	}
+
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= sum; j++) {
+			if (arr[i - 1] <= j) // when element in the list is less then target sum 
+				t[i][j] = t[i - 1][j - arr[i - 1]] + t[i - 1][j]; // either exclude or inxlude and add both of them to get final count 
+			else
+				t[i][j] = t[i - 1][j]; // exclude when element in the list is greater then the sum 
+		}
+	}
+
+	return t[n][sum]; // finally return the last row and last column element 
+}
+
+int CountSubsetsWithDiff(int arr[], int n, int diff) {
+	int sumOfArray = 0;
+	for (int i = 0; i < n; i++)
+		sumOfArray += arr[i]; // taking sum of the array 
+
+	if ((sumOfArray + diff) % 2 != 0)
+		return 0;
+	else
+		return CountSubsetsWithSum(arr, n, (sumOfArray + diff) / 2);// we will get the number of array(subset) with particular sum 
+}
+
+signed main() {
+	int n; cin >> n;
+	int arr[n];
+	for (int i = 0; i < n; i++)
+		cin >> arr[i];
+	int diff; cin >> diff;
+
+	cout << CountSubsetsWithDiff(arr, n, diff) << endl;
+	return 0;
+}
+
 //7. Target Sum
 
 https://leetcode.com/problems/target-sum/description/
@@ -391,6 +444,56 @@ Explanation:
 +1+1+1-1+1 = 3
 +1+1+1+1-1 = 3
 
+
+class Solution {
+public:
+   int CountSubsetsWithSum(vector<int>& nums,int sum) {
+       int n= nums.size();
+	int t[n + 1][sum + 1]; // DP - matrix
+	// initialization
+	t[0][0] = 1;
+	int k = 1;
+	for (int i = 0; i <= n; i++) {
+		for (int j = 0; j <= sum; j++) {
+			if (i == 0 && j > 0)
+				t[i][j] = 0;
+			if (j == 0 && i > 0) {
+				if (nums[i - 1] == 0) {
+					t[i][j] = pow(2, k);
+					k++;
+				}
+				else
+					t[i][j] = t[i - 1][j];
+			}
+		}
+	}
+
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= sum; j++) {
+			if (nums[i - 1] <= j)
+				t[i][j] = t[i - 1][j - nums[i - 1]] + t[i - 1][j];
+			else
+				t[i][j] = t[i - 1][j];
+		}
+	}
+
+	return t[n][sum];
+}
+    int findTargetSumWays(vector<int>& nums, int diff) {
+        int n= nums.size();
+	int sumOfArray = 0;
+	for (int i = 0; i < n; i++)
+		sumOfArray += nums[i];
+
+	if ((sumOfArray + diff) % 2 != 0)
+		return 0;
+	else
+		return CountSubsetsWithSum(nums, (sumOfArray + diff) / 2);
+
+    
+    }
+};
+
 //8. Unbounded Knapsack
 https://www.geeksforgeeks.org/problems/knapsack-with-duplicate-items4201/1?itm_source=geeksforgeeks&itm_medium=article&itm_campaign=practice_card
 
@@ -408,3 +511,1213 @@ There are many ways to fill knapsack.
 3) 1 instance of 50 unit weight item and 50
    instances of 1 unit weight items.
 We get maximum value with option 2.
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int Un_knapsack(int wt[], int val[], int W, int n) {
+	int t[n + 1][W + 1]; // DP matrix
+
+	for (int i = 0; i <= n; i++) {
+		for (int j = 0; j <= W; j++) {
+			if (i == 0 || j == 0) // base case
+				t[i][j] = 0;
+			else if (wt[i - 1] <= j) { // current wt can fit in bag
+				int val1 = val[i - 1] + t[i][j - wt[i - 1]]; // take current wt
+				int val2 = t[i - 1][j]; // skip current wt
+				t[i][j] = max(val1, val2);
+			}
+			else if (wt[i - 1] > j) // current wt doesn't fit in bag
+				t[i][j] = t[i - 1][j];
+		}
+	}
+
+	return t[n][W];
+}
+
+signed main() {
+	int n; cin >> n; // number of items
+	int val[n], wt[n]; // values and wts array
+	for (int i = 0; i < n; i++)
+		cin >> wt[i];
+	for (int i = 0; i < n; i++)
+		cin >> val[i];
+	int W; cin >> W; // capacity
+
+	cout << Un_knapsack(wt, val, W, n) << endl;
+	return 0;
+}
+
+//9. Rod Cutting Problem
+https://www.geeksforgeeks.org/problems/rod-cutting0840/1
+
+Rod Cutting Problem
+ Given a rod of length n inches and an array of prices that contains prices of all pieces of size smaller than n. Determine the  maximum value obtainable by cutting up the rod and selling the pieces. 
+Example: 
+if length of the rod is 8 and the values of different pieces are given as following, then the maximum obtainable value is 22 (by cutting in two pieces of lengths 2 and 6)
+
+
+length   | 1   2   3   4   5   6   7   8  
+--------------------------------------------
+price    | 1   5   8   9  10  17  17  20
+
+//https://www.geeksforgeeks.org/cutting-a-rod-dp-13/
+#include <bits/stdc++.h>
+using namespace std;
+
+int getMaxProfit(int length[], int price[], int n, int L) {
+	int dp[n + 1][L + 1];
+	for (int i = 0; i <= n; i++)
+		for (int j = 0; j <= L; j++)
+			if (j == 0 || i == 0)
+				dp[i][j] = 0;
+
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= L; j++) {
+			if (length[i - 1] <= j) {
+				dp[i][j] = max(dp[i - 1][j],
+				               price[i - 1] + dp[i][j - length[i - 1]]);
+			}
+			else
+				dp[i][j] = dp[i - 1][j];
+		}
+	}
+
+	return dp[n][L];
+}
+
+signed main() {
+	int n; cin >> n;
+	int length[n], price[n];
+	for (int i = 0; i < n; i++)
+		cin >> length[i];
+	for (int i = 0; i < n; i++)
+		cin >> price[i];
+	int L; cin >> L;
+
+	cout << getMaxProfit(length, price, n, L) << endl;
+	return 0;
+}
+
+// 10.
+https://www.geeksforgeeks.org/problems/coin-change2448/1?itm_source=geeksforgeeks&itm_medium=article&itm_campaign=practice_card
+Coin Change Problem Maximum Number of ways
+Given a value N, if we want to make change for N cents, and we have infinite supply of each of S = { S1, S2, .. , Sm} valued coins, how many ways can we make the change? The order of coins doesn’t matter.
+Example:
+for N = 4 and S = {1,2,3}, there are four solutions: {1,1,1,1},{1,1,2},{2,2},{1,3}. So output should be 4.
+
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int getMaxNumberOfWays(int coins[], int n, int sum) {
+	int t[n + 1][sum + 1];
+	// initialization
+	for (int i = 0; i <= n; i++) {
+		for (int j = 0; j <= sum; j++) {
+			if (i == 0)
+				t[i][j] = 0;
+			if (j == 0)
+				t[i][j] = 1;
+		}
+	}
+
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= sum; j++)
+			if (coins[i - 1] <= j)
+				t[i][j] = t[i - 1][j] + t[i][j - coins[i - 1]];
+			else
+				t[i][j] = t[i - 1][j];
+
+	return t[n][sum];
+}
+
+signed main() {
+	int n; cin >> n;
+	int coins[n];
+	for (int i = 0; i < n; i++)
+		cin >> coins[i];
+	int sum; cin >> sum;
+
+	cout << getMaxNumberOfWays(coins, n, sum) << endl;
+	return 0;
+}
+
+//11. Get minimum number of coins
+https://leetcode.com/problems/coin-change/description/
+
+#include <bits/stdc++.h>
+using namespace std;
+#define INF INT_MAX-1
+
+int getMinNumberOfCoins(int coins[], int n, int sum) {
+	int t[n + 1][sum + 1];
+	// initialization
+	for (int i = 0; i <= n; i++) {
+		for (int j = 0; j <= sum; j++) {
+			if (j == 0)
+				t[i][j] = 0;
+			if (i == 0)
+				t[i][j] = INF;
+			if (i == 1) {
+				if (j % coins[i - 1] == 0)
+					t[i][j] = j / coins[i - 1];
+				else
+					t[i][j] = INF;
+			}
+		}
+	}
+
+	t[0][0] = 0;
+
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= sum; j++)
+			if (coins[i - 1] <= j)
+				t[i][j] = min(t[i - 1][j], 1 + t[i][j - coins[i - 1]]);
+			else
+				t[i][j] = t[i - 1][j];
+
+	return t[n][sum];
+}
+
+signed main() {
+	int n; cin >> n;
+	int coins[n];
+	for (int i = 0; i < n; i++)
+		cin >> coins[i];
+	int sum; cin >> sum;
+
+	cout << getMinNumberOfCoins(coins, n, sum) << endl;
+	return 0;
+}
+
+// LCS- Longest Common Subsequence
+https://leetcode.com/problems/longest-common-subsequence/description/
+
+->Recursive approch
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int LCS(string X, string Y, int n, int m) {
+	// base case
+	if (n == 0 || m == 0)
+		return 0;
+
+  // choice diagram
+	// when both string X and Y is having same last char
+	if (X[n - 1] == Y[m - 1])
+		return 1 + LCS(X, Y, n - 1, m - 1); // count the number and decreament the both's string length
+	// when both string's last character is not same 
+	else
+		return max(LCS(X, Y, n - 1, m), LCS(X, Y, n, m - 1)); // one take full and another by leaving last and vice versa 
+}
+
+int main() {
+	string X, Y; cin >> X >> Y;
+	int n = X.length(), m = Y.length();
+
+	cout << LCS(X, Y, n, m) << endl;
+	return 0;
+}
+
+-> Memoized approch
+
+#include <bits/stdc++.h>
+using namespace std;
+
+
+int dp[1001][1001];
+
+int LCS(string X, string Y, int n, int m) {
+	// base case
+	if (n == 0 || m == 0)
+		dp[n][m] = 0;
+
+	if (dp[n][m] != -1) // when table is not having -1 then return the value which is preseent in that block
+		return dp[n][m];
+
+  // choice diagram 
+	// when last character is same
+	if (X[n - 1] == Y[m - 1])
+		dp[n][m] = 1 + LCS(X, Y, n - 1, m - 1);// count the number and decreament the both's string length // store the value in particular block 
+	// when last character is not same -> pick max
+	else
+		dp[n][m] = max(LCS(X, Y, n - 1, m), LCS(X, Y, n, m - 1)); // one take full and another by leaving last char and vice versa // store the value in particular block 
+
+	return dp[n][m];
+}
+
+int main() {
+	string X, Y; cin >> X >> Y;
+	int n = X.length(), m = Y.length();
+
+	memset(dp, -1, sizeof(dp)); // intialize the whole dp matrix with -1; // from memset we can initialise either -1 and zero;
+
+	cout << LCS(X, Y, n, m) << endl;
+	return 0;
+}
+
+-> Tabulation approch
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int LCS(string X, string Y, int n, int m) {
+	int dp[n + 1][m + 1]; // DP - matrix
+
+	// initialize 1st row and of dp matrix with 0 according to the base condition of recursion // base case of recursion --> for initialization of dp - matrix
+	for (int i = 0; i <= n; i++)
+		for (int j = 0; j <= m; j++)
+			if (i == 0 || j == 0)
+				dp[i][j] = 0;
+// choise diagram is used to fill rest of the matrix 
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= m; j++)
+			if (X[i - 1] == Y[j - 1]) // when last character is same
+				dp[i][j] = 1 + dp[i - 1][j - 1];
+			else // when last character is not same -> pick max
+				dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
+
+	return dp[n][m]; // last row and last column element will give the length of the LCS;
+}
+
+int main() {
+	string X, Y; cin >> X >> Y;
+	int n = X.length(), m = Y.length();
+
+	cout << LCS(X, Y, n, m) << endl;
+	return 0;
+}
+
+// https://www.geeksforgeeks.org/longest-common-subsequence-dp-4/#:~:text=Time%20complexity%20of%20the%20above,length%20of%20LCS%20is%200.&text=In%20the%20above%20partial%20recursion,%E2%80%9D)%20is%20being%20solved%20twice.
+
+
+// Longest common substring
+https://www.geeksforgeeks.org/problems/longest-common-substring1452/1?itm_source=geeksforgeeks&itm_medium=article&itm_campaign=practice_card
+#include <bits/stdc++.h>
+using namespace std;
+
+int LCSubstr(string X, string Y, int n, int m) {
+	int dp[n + 1][m + 1]; // DP - matrix
+
+  // base condition 
+	for (int i = 0; i <= n; i++)
+		for (int j = 0; j <= m; j++)
+			if (i == 0 || j == 0)
+				dp[i][j] = 0; //
+
+  // choice diagram 
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= m; j++)
+			if (X[i - 1] == Y[j - 1]) // when both string's last char is same
+				dp[i][j] = 1 + dp[i - 1][j - 1]; // count the number and decrement the table 
+			else
+				dp[i][j] = 0; // variation from LCS(DP)
+
+	int mx = INT_MIN;
+	for (int i = 0; i <= n; i++)
+		for (int j = 0; j <= m; j++)
+			mx = max(mx, dp[i][j]);
+
+	return mx;
+}
+
+int main() {
+	string X, Y; cin >> X >> Y;
+	int n = X.length(), m = Y.length();
+
+	cout << LCSubstr(X, Y, n, m) << endl;
+	return 0;
+}
+
+// https://www.geeksforgeeks.org/longest-common-substring-dp-29/
+
+
+//  Print LCS
+// https://www.geeksforgeeks.org/printing-longest-common-subsequence/
+#include <bits/stdc++.h>
+using namespace std;
+
+string LCS(string X, string Y, int n, int m) {
+	int dp[n + 1][m + 1]; // DP - matrix
+
+	// base case of recursion --> for initialization of dp - matrix
+	for (int i = 0; i <= n; i++)
+		for (int j = 0; j <= m; j++)
+			if (i == 0 || j == 0)
+				dp[i][j] = 0;
+
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= m; j++)
+			if (X[i - 1] == Y[j - 1]) // when last character is same
+				dp[i][j] = 1 + dp[i - 1][j - 1];
+			else // when last character is not same -> pick max
+				dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
+
+	int i = n, j = m;
+	string lcs = ""; // store charecter when it is equal in the table 
+	while (i > 0 && j > 0) {
+		if (X[i - 1] == Y[j - 1]) {
+			lcs += X[i - 1]; // insert in string 
+			i--, j--;
+		}
+		else {
+			if (dp[i][j - 1] > dp[i - 1][j])
+				j--; // move to the larger side 
+			else
+				i--;
+		}
+	}
+	reverse(lcs.begin(), lcs.end()); // at last reverse the string to get LCS 
+
+	return lcs;
+}
+
+signed main() {
+	string X, Y; cin >> X >> Y;
+	int n = X.length(), m = Y.length();
+
+	cout << LCS(X, Y, n, m) << endl;
+	return 0;
+}
+
+
+// Shortest Common Supersequence
+
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int LCS(string X, string Y, int n, int m) {
+	int dp[n + 1][m + 1]; // DP - matrix
+
+	// base case of recursion --> for initialization of dp - matrix
+	for (int i = 0; i <= n; i++)
+		for (int j = 0; j <= m; j++)
+			if (i == 0 || j == 0)
+				dp[i][j] = 0;
+
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= m; j++)
+			if (X[i - 1] == Y[j - 1]) // when last character is same
+				dp[i][j] = 1 + dp[i - 1][j - 1];
+			else // when last character is not same -> pick max
+				dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
+
+	return dp[n][m];
+}
+
+int SCS(string X, string Y, int n, int m) {
+	return m + n - LCS(X, Y, n, m); // formula // n-> length of string x ; m-> length of string y
+}
+
+signed main() {
+	string X, Y; cin >> X >> Y;
+	int n = X.length(), m = Y.length();
+
+	cout << SCS(X, Y, n, m) << endl;
+	return 0;
+}
+
+
+// Minimum insertion deletion to convert a to b.cpp
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int LCS(string X, string Y, int n, int m) {
+	int dp[n + 1][m + 1]; // DP - matrix
+
+	// base case of recursion --> for initialization of dp - matrix
+	for (int i = 0; i <= n; i++)
+		for (int j = 0; j <= m; j++)
+			if (i == 0 || j == 0)
+				dp[i][j] = 0;
+
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= m; j++)
+			if (X[i - 1] == Y[j - 1]) // when last character is same
+				dp[i][j] = 1 + dp[i - 1][j - 1];
+			else // when last character is not same -> pick max
+				dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
+
+	return dp[n][m];
+}
+
+void MinInsertDel(string X, string Y, int n, int m) {
+	int lcs_len = LCS(X, Y, n, m);
+	cout << "Minimum number of deletions = " << (n - lcs_len)<<endl;
+  cout << "Minimum number of insertions = " << (m - lcs_len)<<endl;
+}
+
+int main() {
+	string X, Y; cin >> X >> Y;
+	int n = X.length(), m = Y.length();
+
+	MinInsertDel(X, Y, n, m) << endl;
+	return 0;
+}
+
+
+// Longest Palindromic Subsequence.cpp
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int LCS(string X, string Y, int n, int m) {
+	int dp[n + 1][m + 1]; // DP - matrix
+
+	// base case of recursion --> for initialization of dp - matrix
+	for (int i = 0; i <= n; i++)
+		for (int j = 0; j <= m; j++)
+			if (i == 0 || j == 0)
+				dp[i][j] = 0;
+
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= m; j++)
+			if (X[i - 1] == Y[j - 1]) // when last character is same
+				dp[i][j] = 1 + dp[i - 1][j - 1];
+			else // when last character is not same -> pick max
+				dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
+
+	return dp[n][m];
+}
+
+int LPS(string X, int n) {
+	string rev_X = X;
+	reverse(rev_X.begin(), rev_X.end()); // reverse the string // take reversed string as another string of lcs and apply lcs 
+	return LCS(X, rev_X, n, n);
+}
+
+signed main() {
+	string X, Y; cin >> X;
+	int n = X.length();
+
+	cout << LPS(X, n) << endl;
+	return 0;
+}
+
+//minimum number of deletions to make a string a palindrome
+
+
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int LCS(string X, string Y, int n, int m) {
+	int dp[n + 1][m + 1]; // DP - matrix
+
+	// base case of recursion --> for initialization of dp - matrix
+	for (int i = 0; i <= n; i++)
+		for (int j = 0; j <= m; j++)
+			if (i == 0 || j == 0)
+				dp[i][j] = 0;
+
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= m; j++)
+			if (X[i - 1] == Y[j - 1]) // when last character is same
+				dp[i][j] = 1 + dp[i - 1][j - 1];
+			else // when last character is not same -> pick max
+				dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
+
+	return dp[n][m];
+}
+
+int LPS(string X, int n) {
+	string rev_X = X;
+	reverse(rev_X.begin(), rev_X.end());
+	return LCS(X, rev_X, n, n);
+}
+// . minimum number of deletions 
+  // min = n – len
+int MinDelForPallindrome(string X, int n) {
+	return n - LPS(X, n); // substract LPS from the length of string to get Minimum number of deletions to make a string palindrome
+}
+
+signed main() {
+	string X, Y; cin >> X;
+	int n = X.length();
+
+	cout << MinDelForPallindrome(X, n) << endl;
+	return 0;
+}
+
+// Print SCS
+
+#include <bits/stdc++.h>
+using namespace std;
+
+string SCS(string X, string Y, int n, int m) {
+	int dp[n + 1][m + 1]; // DP - matrix
+
+	// base case of recursion --> for initialization of dp - matrix
+	for (int i = 0; i <= n; i++)
+		for (int j = 0; j <= m; j++)
+			if (i == 0 || j == 0)
+				dp[i][j] = 0;
+
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= m; j++)
+			if (X[i - 1] == Y[j - 1]) // when last character is same
+				dp[i][j] = 1 + dp[i - 1][j - 1];
+			else // when last character is not same -> pick max
+				dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
+
+	int i = n, j = m;
+	string scs = "";
+	while (i > 0 && j > 0) {
+		if (X[i - 1] == Y[j - 1]) { // when char are eqaul from table obs 
+			scs += X[i - 1]; // take only once 
+			i--, j--; // and decrement both
+		}
+		else if (dp[i][j - 1] > dp[i - 1][j]) {
+			scs += Y[j - 1]; // in this we will take the charecter to string 
+			j--;
+		}
+		else {
+			scs += X[i - 1]; // taking the charecter to string 
+			i--;
+		}
+	}
+
+	while (i > 0) {
+		scs += X[i - 1]; // take left chareter from str1
+		i--;
+	}
+
+	while (j > 0) {
+		scs += Y[j - 1]; // take left chareter from str1
+		j--;
+	}
+
+	reverse(scs.begin(), scs.end());
+
+	return scs;
+}
+
+int main() {
+	string X, Y; cin >> X >> Y;
+	int n = X.length(), m = Y.length();
+
+	cout << SCS(X, Y, n, m) << endl;
+	return 0;
+}
+
+//  https://www.geeksforgeeks.org/longest-repeating-subsequence/
+#include <bits/stdc++.h>
+using namespace std;
+
+int LCS(string X, string Y, int n, int m) {
+	int dp[n + 1][m + 1]; // DP - matrix
+
+	for (int i = 0; i <= n; i++)
+		for (int j = 0; j <= m; j++)
+			if (i == 0 || j == 0)
+				dp[i][j] = 0;
+
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= m; j++)
+			if (X[i - 1] == Y[j - 1] && i != j) // jsut add an condition that element at ith index should not be equal to jth index 
+				dp[i][j] = 1 + dp[i - 1][j - 1];
+			else
+				dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
+
+	return dp[n][m];
+}
+
+signed main() {
+	string X; cin >> X;
+	int n = X.length();
+
+	cout << LCS(X, X, n, n) << endl;
+	return 0;
+}
+// https://leetcode.com/problems/is-subsequence/description/
+#include <bits/stdc++.h>
+using namespace std;
+
+int LCS(string X, string Y, int n, int m) {
+	int dp[n + 1][m + 1]; // DP - matrix
+
+	// base case of recursion --> for initialization of dp - matrix
+	for (int i = 0; i <= n; i++)
+		for (int j = 0; j <= m; j++)
+			if (i == 0 || j == 0)
+				dp[i][j] = 0;
+
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= m; j++)
+			if (X[i - 1] == Y[j - 1])
+				dp[i][j] = 1 + dp[i - 1][j - 1];
+			else
+				dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
+
+	return dp[n][m];
+}
+
+bool SeqPatternMatching(string X, string Y, int n, int m) {
+	return LCS(X, Y, n, m) == min(n, m); // condition to get sequence // if string x is there in y print boolean value according to LCS 
+}
+
+signed main() {
+	string X, Y; cin >> X >> Y;
+	int n = X.length(), m = Y.length();
+
+	SeqPatternMatching(X, Y, n, m) ? "YES\n" : "NO\n";
+	return 0;
+}
+
+//Dynamic Programming/26 Minimum Number of insertion to make a string palindrome.cpp
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int LCS(string X, string Y, int n, int m) {
+	int dp[n + 1][m + 1]; // DP - matrix
+
+	// base case of recursion --> for initialization of dp - matrix
+	for (int i = 0; i <= n; i++)
+		for (int j = 0; j <= m; j++)
+			if (i == 0 || j == 0)
+				dp[i][j] = 0;
+
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= m; j++)
+			if (X[i - 1] == Y[j - 1]) // when last character is same
+				dp[i][j] = 1 + dp[i - 1][j - 1];
+			else // when last character is not same -> pick max
+				dp[i][j] = max(dp[i][j - 1], dp[i - 1][j]);
+
+	return dp[n][m];
+}
+
+int LPS(string X, int n) {
+	string rev_X = X;
+	reverse(rev_X.begin(), rev_X.end());
+	return LCS(X, rev_X, n, n);
+}
+
+int MinInsertForPallindrome(string X, int n) {
+	return n - LPS(X, n); // substract LPS from the length of string to get Minimum number of insertion to make a string palindrome
+}
+
+int main() {
+	string X, Y; cin >> X;
+	int n = X.length();
+
+	cout << MinInsertForPallindrome(X, n) << endl;
+	return 0;
+}
+
+// MCM problem
+
+// Recursive
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int Solve(int arr[], int i, int j) {
+	if (i >= j)
+		return 0;
+
+	int ans = INT_MAX;
+	for (int k = i; k <= j - 1; k++) {
+		int temp_ans = Solve(arr, i, k) + Solve(arr, k + 1, j) + arr[i - 1] * arr[k] * arr[j];
+		ans = min(ans, temp_ans); // take temp minimum value from the temp answers
+	}
+
+	return ans;
+}
+
+signed main() {
+	int n; cin >> n;
+	int arr[n];
+	for (int i = 0; i < n; i++)
+		cin >> arr[i];
+
+	cout << Solve(arr, 1, n - 1) << endl;
+	return 0;
+}
+
+//Memoziation
+#include <bits/stdc++.h>
+using namespace std;
+
+const int D = 1000;
+int t[D][D];
+
+int Solve(int arr[], int i, int j) {
+	if (i >= j) {
+		t[i][j] = 0;
+		return 0;
+	}
+
+	if (t[i][j] != -1)// when it is not zero means return the value from the table other than -1
+		return t[i][j]; 
+
+	int ans = INT_MAX;
+	for (int k = i; k <= j - 1; k++) {
+		int temp_ans = Solve(arr, i, k) + Solve(arr, k + 1, j) + arr[i - 1] * arr[k] * arr[j];
+		ans = min(ans, temp_ans);
+	}
+
+	return t[i][j] = ans; // store it in table 
+}
+
+signed main() {
+	int n; cin >> n;
+	int arr[n];
+	for (int i = 0; i < n; i++)
+		cin >> arr[i];
+
+	memset(t, -1, sizeof(t));
+
+	cout << Solve(arr, 1, n - 1) << endl;
+	return 0;
+}
+//https://www.techiedelight.com/matrix-chain-multiplication/
+
+
+// Palindromic Partition
+
+// Recursive
+#include <bits/stdc++.h>
+using namespace std;
+
+bool isPallindrome(string X, int i, int j) { // function to check either a string is palindrome or not 
+	while (i <= j) {
+		if (X[i] != X[j])
+			return false;
+		i++, j--;
+	}
+
+	return true;
+}
+
+int Solve(string X, int i, int j) {
+	if (i >= j || isPallindrome(X, i, j))
+		return 0;
+
+	int ans = INT_MAX;
+	for (int k = i; k < j; k++) {
+		int temp_ans = Solve(X, i, k) + Solve(X, k + 1, j) + 1;
+		ans = min(ans, temp_ans);
+	}
+
+	return ans;
+}
+
+int main() {
+	string X; cin >> X;
+
+	cout << Solve(X, 0, X.length() - 1) << endl;
+	return 0;
+}
+
+
+//Memoized
+
+#include <bits/stdc++.h>
+using namespace std;
+
+const int D = 1001;
+int t[D][D];
+
+bool isPallindrome(string X, int i, int j) {
+	while (i <= j) {
+		if (X[i] != X[j])
+			return false;
+		i++, j--;
+	}
+
+	return true;
+}
+
+int Solve(string X, int i, int j) {
+	if (i >= j || isPallindrome(X, i, j)) {
+		t[i][j] = 0;
+		return 0;
+	}
+
+	if (t[i][j] != -1)
+		return t[i][j];
+
+	int ans = INT_MAX;
+	for (int k = i; k < j; k++) {
+		int temp_ans = Solve(X, i, k) + Solve(X, k + 1, j) + 1;
+		ans = min(ans, temp_ans);
+	}
+
+	return t[i][j] = ans;
+}
+
+int main() {
+	string X; cin >> X;
+
+	memset(t, -1, sizeof(t));
+
+	cout << Solve(X, 0, X.length() - 1) << endl;
+	return 0;
+}
+
+// Memoization+further optimaztion
+#include <bits/stdc++.h>
+using namespace std;
+
+const int D = 1001;
+int t[D][D];
+
+bool isPallindrome(string X, int i, int j) {
+	while (i <= j) {
+		if (X[i] != X[j])
+			return false;
+		i++, j--;
+	}
+
+	return true;
+}
+
+int Solve(string X, int i, int j) {
+	if (t[i][j] != -1)
+		return t[i][j];
+
+	if (i >= j || isPallindrome(X, i, j)) {
+		t[i][j] = 0;
+		return 0;
+	}
+
+	int ans = INT_MAX;
+	for (int k = i; k < j; k++) {
+		int left, right;
+		if (t[i][k] == -1)
+			left = Solve(X, i, k);
+		else
+			left = t[i][k];
+
+		if (t[k + 1][j] == -1)
+			right = Solve(X, k + 1, j);
+		else
+			right = t[k + 1][j];
+
+		int temp_ans = left + right + 1;
+		ans = min(ans, temp_ans);
+	}
+
+	return t[i][j] = ans;
+}
+
+int main() {
+	string X; cin >> X;
+
+	memset(t, -1, sizeof(t));
+
+	cout << Solve(X, 0, X.length() - 1) << endl;
+	return 0;
+}
+
+
+//Evaluate Expression to true Recursive
+https://www.geeksforgeeks.org/problems/boolean-parenthesization5610/1
+#include <bits/stdc++.h>
+using namespace std;
+
+int Solve(string X, int i, int j, bool isTrue) {
+	if (i >= j) {
+		if (isTrue)
+			return X[i] == 'T';
+		else
+			return X[i] == 'F';
+	}
+
+	int ans = 0;
+	for (int k = i + 1; k < j; k += 2) {
+		int l_T = Solve(X, i, k - 1, true);
+		int l_F = Solve(X, i, k - 1, false);
+		int r_T = Solve(X, k + 1, j, true);
+		int r_F = Solve(X, k + 1, j, false);
+
+		if (X[k] == '|') {
+			if (isTrue == true)
+				ans += l_T * r_T + l_T * r_F + l_F * r_T;
+			else
+				ans += l_F * r_F;
+		}
+		else if (X[k] == '&') {
+			if (isTrue == true)
+				ans += l_T * r_T;
+			else
+				ans += l_T * r_F + l_F * r_T + l_F * r_F;
+		}
+		else if (X[k] == '^') {
+			if (isTrue == true)
+				ans += l_T * r_F + l_F * r_T;
+			else
+				ans += l_T * r_T + l_F * r_F;
+		}
+
+	}
+
+	return ans;
+}
+
+int main() {
+	string X; cin >> X;
+	cout << Solve(X, 0, X.length() - 1, true) << endl;
+	return 0;
+}
+// memoization using map
+#include <bits/stdc++.h>
+using namespace std;
+
+unordered_map<string, int> ump;
+
+int Solve(string X, int i, int j, bool isTrue) {
+	string key = to_string(i) + " " + to_string(j) + " " + (isTrue ? "T" : "F");
+
+	if (ump.find(key) != ump.end())
+		return ump[key];
+
+	if (i >= j) {
+		if (isTrue)
+			ump[key] = X[i] == 'T';
+		else
+			ump[key] = X[i] == 'F';
+		return ump[key];
+	}
+
+	int ans = 0;
+	for (int k = i + 1; k < j; k += 2) {
+		int l_T = Solve(X, i, k - 1, true);
+		int l_F = Solve(X, i, k - 1, false);
+		int r_T = Solve(X, k + 1, j, true);
+		int r_F = Solve(X, k + 1, j, false);
+
+		if (X[k] == '|') {
+			if (isTrue == true)
+				ans += l_T * r_T + l_T * r_F + l_F * r_T;
+			else
+				ans += l_F * r_F;
+		}
+		else if (X[k] == '&') {
+			if (isTrue == true)
+				ans += l_T * r_T;
+			else
+				ans += l_T * r_F + l_F * r_T + l_F * r_F;
+		}
+		else if (X[k] == '^') {
+			if (isTrue == true)
+				ans += l_T * r_F + l_F * r_T;
+			else
+				ans += l_T * r_T + l_F * r_F;
+		}
+
+	}
+
+	return ump[key] = ans;
+}
+
+signed main() {
+	string X; cin >> X;
+	ump.clear();
+	cout << Solve(X, 0, X.length() - 1, true) << endl;
+	return 0;
+}
+
+// Scramble String
+https://www.interviewbit.com/problems/scramble-string/
+
+
+#include <bits/stdc++.h>
+using namespace std;
+
+bool Solve(string X, string Y) {
+	if (X.compare(Y) == 0)
+		return true;
+	if (X.length() <= 1)
+		return false;
+
+	int n = X.length();
+	int flag = false;
+	for (int i = 1; i <= n - 1; i++) {
+		if ((Solve(X.substr(0, i), Y.substr(n - i, i)) && Solve(X.substr(i), Y.substr(0, n - i))) || // these are two condition for swapping and not swapping the string 
+		        (Solve(X.substr(0, i), Y.substr(0, i)) && Solve(X.substr(i), Y.substr(i)))) {
+			flag = true; // change the  flag to true and break 
+			break;
+		}
+	}
+
+	return flag;
+}
+
+int main() {
+	string X, Y; cin >> X >> Y;
+
+	if (X.length() != Y.length())
+		cout << "No\n";
+	else
+		Solve(X, Y) ? cout << "Yes\n" : cout << "No\n";
+	return 0;
+}
+
+// Optimaziation(top-down dp)
+#include <bits/stdc++.h>
+using namespace std;
+
+unordered_map<string, int> ump;
+
+bool Solve(string X, string Y) {
+	string key = X + " " + Y;
+	if (ump.find(key) != ump.end()) // if we did not found the and travesed upto end of the map 
+		return ump[key];
+
+	if (X.compare(Y) == 0) {
+		ump[key] = true;
+		return true;
+	}
+	if (X.length() <= 1) {
+		ump[key] = false;
+		return false;
+	}
+
+	int n = X.length();
+	int flag = false;
+	for (int i = 1; i <= n - 1; i++) {
+		if ((Solve(X.substr(0, i), Y.substr(n - i, i)) && Solve(X.substr(i), Y.substr(0, n - i))) ||
+		        (Solve(X.substr(0, i), Y.substr(0, i)) && Solve(X.substr(i), Y.substr(i)))) {
+			flag = true;
+			break;
+		}
+	}
+
+	return ump[key] = flag; // store in table for further reference 
+}
+
+int main() {
+	string X, Y; cin >> X >> Y;
+
+	ump.clear();
+
+	if (X.length() != Y.length())
+		cout << "No\n";
+	else
+		Solve(X, Y) ? cout << "Yes\n" : cout << "No\n";
+	return 0;
+}
+
+
+// egg dropping puzzle
+
+// recursive
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int Solve(int eggs, int floors) {
+	if (eggs == 1)
+		return floors;
+	if (floors == 0 || floors == 1)
+		return floors;
+
+	int mn = INT_MAX;
+	for (int k = 1; k <= floors; k++) {
+		int temp_ans = 1 + max(Solve(eggs - 1, k - 1), Solve(eggs, floors - k)); // once egg break means decrement both floor and egg another agg did not break means check egg dropping from above 
+		mn = min(mn, temp_ans);
+	}
+
+	return mn;
+}
+
+int main() {
+	int eggs, floors;
+	cin >> eggs >> floors;
+
+	cout << Solve(eggs, floors) << endl;
+	return 0;
+}
+
+//top-down
+
+#include <bits/stdc++.h>
+using namespace std;
+
+const int D = 101;
+int t[D][D];
+
+int Solve(int eggs, int floors) {
+	if (t[eggs][floors] != -1)
+		return t[eggs][floors];
+
+	if (eggs == 1 || floors == 0 || floors == 1) {
+		t[eggs][floors] = floors;
+		return floors;
+	}
+
+	int mn = INT_MAX;
+	for (int k = 1; k <= floors; k++) {
+		int temp_ans = 1 + max(Solve(eggs - 1, k - 1), Solve(eggs, floors - k));
+		mn = min(mn, temp_ans);
+	}
+
+	return t[eggs][floors] = mn; // store in table for further reference 
+}
+
+signed main() {
+	int eggs, floors;
+	cin >> eggs >> floors;
+
+	memset(t, -1, sizeof(t));
+
+	cout << Solve(eggs, floors) << endl;
+	return 0;
+}
+
+//further optimization
+
+#include <bits/stdc++.h>
+using namespace std;
+
+const int D = 101;
+int dp[D][D];
+
+int Solve(int eggs, int floors) {
+	if (dp[eggs][floors] != -1) // if value is already there in the table then return the value 
+		return dp[eggs][floors];
+
+	if (eggs == 1 || floors == 0 || floors == 1) { // base condition
+		dp[eggs][floors] = floors;
+		return floors;
+	}
+
+	int mn = INT_MAX;
+	for (int k = 1; k <= floors; k++) {
+		int top, bottom;
+		if (dp[eggs - 1][k - 1] != -1) // break the temp in sub problemes 
+			top = dp[eggs - 1][k - 1];
+		else {
+			top = Solve(eggs - 1, k - 1);
+			dp[eggs - 1][k - 1] = top;
+		}
+
+		if (dp[eggs][floors - k] != -1)
+			bottom = dp[eggs][floors - k];
+		else {
+			bottom = Solve(eggs, floors - k);
+			dp[eggs][floors - k] = bottom;
+		}
+		int temp_ans = 1 + max(top, bottom);
+		mn = min(mn, temp_ans);
+	}
+
+	return dp[eggs][floors] = mn;
+}
+
+int main() {
+	int eggs, floors;
+	cin >> eggs >> floors;
+
+	memset(dp, -1, sizeof(dp));
+
+	cout << Solve(eggs, floors) << endl;
+	return 0;
+}
