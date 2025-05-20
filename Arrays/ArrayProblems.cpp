@@ -119,3 +119,91 @@ int main() {
 
     return 0;
 }
+
+
+// 5. Indexes of subarray sum
+
+https://www.geeksforgeeks.org/problems/subarray-with-given-sum-1587115621/1
+
+#include <bits/stdc++.h>
+using namespace std;
+
+/**
+ * Finds a contiguous subarray of non-negative integers whose sum equals S.
+ * Returns a pair of 0-based indices {start, end}, or {-1, -1} if none exists.
+ */
+pair<int,int> subarraySum(const vector<int>& nums, long long S) {
+    int n = nums.size();
+    long long current_sum = 0;
+    int left = 0;
+
+    for (int right = 0; right < n; ++right) {
+        current_sum += nums[right];
+
+        // Shrink window from the left as long as current_sum > S
+        while (current_sum > S && left <= right) {
+            current_sum -= nums[left];
+            ++left;
+        }
+
+        // Check if we hit the target sum
+        if (current_sum == S) {
+            return { left, right };
+        }
+    }
+
+    return { -1, -1 };
+}
+
+
+// 6. Problem : Merge Two Sorted Arrays In-Place
+https://leetcode.com/problems/merge-sorted-array/description/
+
+#include <bits/stdc++.h>
+using namespace std;
+
+/**
+ * Merges array B into A in-place.
+ * A has size m + n, with the first m elements valid and the last n elements empty (or arbitrary).
+ * B has size n.
+ * After the function, A contains all m+n elements in sorted order.
+ */
+void mergeInto(vector<int>& A, int m, const vector<int>& B, int n) {
+    int i = m - 1;         // Last valid element in A
+    int j = n - 1;         // Last element in B
+    int k = m + n - 1;     // End of merged array in A
+
+    // Merge from the back
+    while (i >= 0 && j >= 0) {
+        if (A[i] > B[j]) {
+            A[k--] = A[i--];
+        } else {
+            A[k--] = B[j--];
+        }
+    }
+    // If any elements remain in B, copy them
+    while (j >= 0) {
+        A[k--] = B[j--];
+    }
+}
+
+
+//7. Kadane Algorithm
+https://leetcode.com/problems/maximum-subarray
+
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int sum=0;
+        int maxi=nums[0];
+        for(int i=0;i<nums.size();i++)
+        {
+            sum=sum+nums[i];
+            maxi=max(maxi,sum);
+            if(sum<0)
+            sum=0;
+        }
+        return maxi;
+
+    }
+};

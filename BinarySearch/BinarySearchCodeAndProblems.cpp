@@ -344,25 +344,7 @@ int allocateBooks(vector<int> arr, int n, int m) {
 //6. Painters Partition Problem
 https://www.naukri.com/code360/problems/painter's-partition-problem_1089557
 
-//7. Kadane Algorithm
-https://leetcode.com/problems/maximum-subarray
 
-class Solution {
-public:
-    int maxSubArray(vector<int>& nums) {
-        int sum=0;
-        int maxi=nums[0];
-        for(int i=0;i<nums.size();i++)
-        {
-            sum=sum+nums[i];
-            maxi=max(maxi,sum);
-            if(sum<0)
-            sum=0;
-        }
-        return maxi;
-        
-    }
-};
 
 // 8. Maximum sum subarray of size K
 https://www.geeksforgeeks.org/problems/max-sum-subarray-of-size-k5313/1

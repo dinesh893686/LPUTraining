@@ -81,8 +81,7 @@ return -1;
 
 
 // Duplicate in array
-https://www.naukri.com/code360/problems/duplicate-in-array_893397?source=youtube&campaign=love_babbar_codestudio1&utm_source=youtube&utm_medium=affiliate&utm_campaign=love_babbar_codestudio1
-
+https://www.naukri.com/code360/problems/duplicate-in-array_893397
 
 #include<vector>
 using namespace std;
