@@ -47,6 +47,7 @@ int main() {
     return 0;
 }
 
+// https://leetcode.com/problems/find-peak-element/description/
 int findPeak(int arr[], int n) {
 
     int s =0, e = n-1;
@@ -66,8 +67,7 @@ int findPeak(int arr[], int n) {
 }
 
 //1. Find fast and last occurance 
-https://www.naukri.com/code360/problems/first-and-last-position-of-an-element-in-sorted-array_1082549
-
+https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/description/
 #include<vector>
 using namespace std;
 int firstOcc(vector<int>& arr, int n, int key) {
@@ -362,7 +362,7 @@ int maximumSumSubarray(int K, vector<int> &Arr , int N){
   while (j<N){
     sum=sum+Arr[j]; // do calculation to reduse tc
     if (j-i+1<K) J++; // increament j upto when the size of the size of window is not equal to required size
-    else// when sindow size hit to the required window size 
+    else// when window size hit to the required window size
     {
       mx=max(mx,sum); // selecting ans from the candidates
       sum=sum-Arr[i]; // start removing from the first
@@ -491,8 +491,8 @@ public:
     }
 };
 
-// 12. Longest substring With at least K repeating characters - Homework
-https://leetcode.com/problems/longest-substring-with-at-least-k-repeating-characters/description/
+// 12. Longest substring With  K unique characters
+https://www.geeksforgeeks.org/problems/longest-k-unique-characters-substring0853/1
 
 
 int longestKSubstr(string &s, int k) {
@@ -572,3 +572,4 @@ public:
         return mx;
     }
 };
+

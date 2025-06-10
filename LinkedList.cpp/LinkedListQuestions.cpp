@@ -1,3 +1,45 @@
+
+4. Detailed Breakdown
+4.1 Introduction & Motivation (5 min)
+Why not just arrays?
+
+Arrays: O(1) random access but expensive insert/delete (shifting).
+
+Linked lists: O(1) insert/delete at known positions, dynamic size.
+
+Real-world analogy: A scavenger hunt where each clue points to the next.
+
+4.2 Core Concepts & Variants (15 min)
+4.2.1 Node Structure
+text
+Copy
+Edit
++------+------+
+| data | next |
++------+------+
+4.2.2 Singly Linked List
+Each node points to its successor.
+
+Head pointer maintains start; tail can be tracked for O(1) tail inserts.
+
+4.2.3 Doubly Linked List
+text
+Copy
+Edit
++------+-------+------+
+| prev | data  | next |
++------+-------+------+
+Allows backward traversal and easier deletion.
+
+4.2.4 Circular Linked List
+Last node’s next points back to head.
+
+Useful for round-robin scheduling, “wrap-around” buffers.
+
+Use whiteboard to draw each variant and pointer flow.
+
+4.3 Live Coding: Singly Linked List (20 min)
+
 #include<iostream>
 #include<map>
 using namespace std;
@@ -290,7 +332,36 @@ int main() {
 
 //1. Reverse a Linked List
 
+//
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+      if(head==NULL || head->next==NULL) return head;
+
+      ListNode* k= head->next;
+      ListNode* t= head;
+      ListNode* m=reverseList(head->next);
+
+      k->next=t;
+      t->next=NULL;
+      return m;
+
+    }
+};
+
 https://www.naukri.com/code360/problems/reverse-the-singly-linked-list_799897
+// Iteratively reverse the list
+    void reverseIterative() {
+        Node* prev = nullptr;
+        Node* cur  = head;
+        while (cur) {
+            Node* nxt = cur->next;  // save next
+            cur->next = prev;       // reverse pointer
+            prev = cur;             // advance prev
+            cur  = nxt;             // advance cur
+        }
+        head = prev;
+    }
 
 
 //2.Middle element of Linked List
@@ -484,8 +555,31 @@ Node * uniqueSortedList(Node * head) {
 }
 
 //6. Remove duplicate from unsorted linked list
+  https://www.naukri.com/code360/problems/remove-duplicates-from-unsorted-linked-list_1069331
+Node* removeDuplicates(Node* head) {
+    if (!head) return nullptr;
+    std::unordered_set<int> seen;
+    Node* prev = head;
+    Node* curr = head->next;
+    seen.insert(head->data);
 
-https://www.naukri.com/code360/problems/remove-duplicates-from-unsorted-linked-list_1069331
+    while (curr) {
+        if (seen.count(curr->data)) {
+            // duplicate → remove curr
+            prev->next = curr->next;
+            delete curr;
+            curr = prev->next;
+        } else {
+            // first time seeing this value
+            seen.insert(curr->data);
+            prev = curr;
+            curr = curr->next;
+        }
+    }
+    return head;
+}
+
+
 
 
 //7. Sort linked list of 0s 1s 2s
@@ -790,7 +884,7 @@ class Solution
     }
 };
 
-//11. Merge two sorted Linked List
+//11. Merge-sort two sorted Linked List
 https://www.naukri.com/code360/problems/mergesort-linked-list_630514
 
 /********************************************************************

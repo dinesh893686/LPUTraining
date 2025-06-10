@@ -102,7 +102,7 @@ class Solution
     //Function to delete middle element of a stack.
     void getDeleted(stack<int> &s,int k)
     {
-        if(k==0)
+        if(k==1)
         {
             s.pop();
             return;
@@ -122,6 +122,8 @@ class Solution
         
     }
 };
+
+
 //5. 
 https://www.geeksforgeeks.org/problems/reverse-a-stack/1
 
@@ -189,7 +191,12 @@ public:
             return !kthGrammar(n-1,k-mid);
     }
 };
-//8. Print all subsequences
+
+
+Print Subsets | Print PowerSets | Print all Subsequences
+
+
+
 https://www.geeksforgeeks.org/print-subsequences-string/
 
 //7. Print all subsets
@@ -374,3 +381,4 @@ public:
 	    return result;
 	}
 };
+

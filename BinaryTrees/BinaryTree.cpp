@@ -36,8 +36,31 @@ node* buildTree(node* root) {
 
 }
 
-void levelOrderTraversal(node* root) {
+vector<int> levelOrderTraversal(TreeNode* root) {
+    vector<int> result;
+    if (root == nullptr) {
+        return result;
+    }
+
+    queue<TreeNode*> q;
+    q.push(root);
+
+    while (!q.empty()) {
+        TreeNode* node = q.front();
+        q.pop();
+        result.push_back(node->val);
+
+        if (node->left != nullptr) {
+            q.push(node->left);
+        }
+        if (node->right != nullptr) {
+            q.push(node->right);
+        }
+    }
+
+    return result;
 }
+
 
 void inorder(node* root) {
 }
@@ -175,6 +198,23 @@ pair<bool, int> isBalancedFast(Node* root) {
 
 //4. https://www.geeksforgeeks.org/problems/determine-if-two-trees-are-identical/1
 
+// Function to check if two trees are identical
+bool isIdentical(Node* root1, Node* root2) {
+    // If both nodes are null, they match
+    if (root1 == nullptr && root2 == nullptr)
+        return true;
+
+    // If one is null and the other is not, they don’t match
+    if (root1 == nullptr || root2 == nullptr)
+        return false;
+
+    // Check current node’s data, then recurse on left and right subtrees
+    return (root1->data == root2->data)
+           && isIdentical(root1->left, root2->left)
+           && isIdentical(root1->right, root2->right);
+}
+
+
 //5. https://www.geeksforgeeks.org/problems/sum-tree/1
 
  pair<bool,int> isSumTreeFast(Node* root) {
@@ -219,6 +259,9 @@ pair<bool, int> isBalancedFast(Node* root) {
     {
         return isSumTreeFast(root).first;
     }
+
+
+
 
 //6. https://www.geeksforgeeks.org/problems/zigzag-tree-traversal/1
 
@@ -603,6 +646,9 @@ public:
         return result;
     }
 };
+
+
+
 
 // 13. https://www.geeksforgeeks.org/problems/sum-of-the-longest-bloodline-of-a-tree/1
 class Solution {

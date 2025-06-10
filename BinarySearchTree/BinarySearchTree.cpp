@@ -727,6 +727,7 @@ Node* NormalToBalance(Node* &root) {
 
     return newBST;
 }
+
 // BST from preorder 
 
 Node* createPreorder(vector<int> &inorder, int &index, int min, int max) {
@@ -749,8 +750,11 @@ Node* createPreorder(vector<int> &inorder, int &index, int min, int max) {
     return temp;
 }
 
+
 // Merge two BSTs
 https://www.naukri.com/code360/problems/h_920474
+
+
 
 //1_Merge2BST_Inorder.cpp
 #include <bits/stdc++.h>
