@@ -283,6 +283,159 @@ int main() {
     return 0;
 }
 
+
+// Searching in a nearly sorted array
+https://www.geeksforgeeks.org/problems/search-in-an-almost-sorted-array/1
+// https://www.geeksforgeeks.org/search-almost-sorted-array/
+int binarySearch(int arr[], int l, int r, int x)
+{
+if (r >= l)
+{
+		int mid = l + (r - l) / 2;
+
+		// If the element is present at
+		// one of the middle 3 positions
+		if (arr[mid] == x)
+			return mid;
+		if (mid > l && arr[mid - 1] == x)
+			return (mid - 1);
+		if (mid < r && arr[mid + 1] == x)
+			return (mid + 1);
+
+		// If element is smaller than mid, then
+		// it can only be present in left subarray
+		if (arr[mid] > x)
+			return binarySearch(arr, l, mid - 2, x); // this time check on mid-2 cz mid-1 is already checked
+
+		// Else the element can only be present
+		// in right subarray
+		return binarySearch(arr, mid + 2, r, x); // this time check on mid+2 cz mid+1 is already checked
+}
+
+// floor of an element in sorted array
+https://www.geeksforgeeks.org/problems/floor-in-a-sorted-array-1587115620/1
+
+
+class Solution{
+  public:
+    int findFloor(vector<long long> v, long long n, long long x){
+
+        long long s = 0;
+        long long e = n-1;
+        long long ans = -1;
+        long long mid = s + (e-s)/2;
+
+        while(s<=e) {
+            if(v[mid] == x) {
+                return mid;
+            }
+            if(v[mid] > x) {
+                e = mid - 1;
+            }
+            else {
+                ans = mid;
+                s = mid + 1;
+            }
+            mid = s + (e-s)/2;
+        }
+        return ans;
+    }
+};
+
+
+// Ceil of an element in sorted array
+https://www.geeksforgeeks.org/problems/ceil-in-a-sorted-array/1
+class Solution{
+  public:
+    int findCeil(vector<long long> v, long long n, long long x){
+
+        long long s = 0;
+        long long e = n-1;
+        long long ans = -1;
+        long long mid = s + (e-s)/2;
+
+        while(s<=e) {
+            if(v[mid] == x) {
+                return mid;
+            }
+            if(v[mid] < x) {
+                s = mid + 1;
+            }
+            else {
+                ans = mid;
+                e = mid - 1;
+            }
+            mid = s + (e-s)/2;
+        }
+        return ans;
+    }
+};
+
+// Next alphabetical element
+https://leetcode.com/problems/find-smallest-letter-greater-than-target/description/
+
+class Solution {
+public:
+    char nextGreatestLetter(vector<char>& letters, char target) {
+        int start=0;
+        int end= letters.size()-1;
+        char res=letters[start];
+        while (start<=end){
+            int mid = start+ (end-start)/2;
+            if (target == letters[mid])
+                start=mid+1; // here we dont want to return the matched we want the greater then target
+            else if (target<letters[mid])
+            {
+                res=letters[mid];
+                end=mid-1;
+            }
+            else
+                start=mid+1;
+        }
+        return res;
+    }
+};
+
+
+//find position of element in infinite sorted array
+https://www.geeksforgeeks.org/dsa/find-position-element-sorted-array-infinite-numbers/
+
+int findPosition(vector<int>& arr, int n, int k)
+{
+    int s = 0;
+    int e = 1;
+    int mid = s + (e-s)/2;
+
+    while(arr[e] < k) {
+        s = e;
+        e = e*2;
+        mid = s + (e-s)/2;
+    }
+    return binarySearch(arr, s, e, k);
+}
+
+// Find first 1 in infinite sorted array
+https://www.geeksforgeeks.org/dsa/find-index-first-1-infinite-sorted-array-0s-1s/
+
+
+int findFirstOne(vector<int>& arr) {
+    int s = 0;
+    int e = 1;
+    int mid = s + (e-s)/2;
+
+    while(arr[e] == 0) {
+        s = e;
+        e = e*2;
+        mid = s + (e-s)/2;
+    }
+
+    // just here will be some chnages that you have to find 1 instead of k and that is first occcurance means code will be same to find first occurance
+
+
+    return binarySearch(arr, s, e, 1);
+}
+
+
 // 5. Book Allocation Problem
 https://www.geeksforgeeks.org/allocate-minimum-number-pages/
 #include<vector>
@@ -292,7 +445,7 @@ bool isPossible(vector<int> arr, int n, int m, int mid) {
     int studentCount = 1;
     int pageSum = 0;
     //cout << "checking for mid "<< mid <<endl;
-    
+
     for(int i = 0; i<n; i++) {
         if(pageSum + arr[i] <= mid) {
             pageSum += arr[i];
@@ -316,14 +469,14 @@ bool isPossible(vector<int> arr, int n, int m, int mid) {
 int allocateBooks(vector<int> arr, int n, int m) {
     int s = 0;
     int sum = 0;
-    
+
     for(int i = 0; i<n; i++) {
         sum += arr[i];
     }
     int e = sum;
     int ans = -1;
     int mid = s + (e-s)/2;
-    
+
     while(s<=e)
     {
         if(isPossible(arr,n,m,mid)) {
@@ -343,233 +496,3 @@ int allocateBooks(vector<int> arr, int n, int m) {
 
 //6. Painters Partition Problem
 https://www.naukri.com/code360/problems/painter's-partition-problem_1089557
-
-
-
-// 8. Maximum sum subarray of size K
-https://www.geeksforgeeks.org/problems/max-sum-subarray-of-size-k5313/1
-
-// https://www.geeksforgeeks.org/find-maximum-minimum-sum-subarray-size-k/
-//Time Complexity : O(n)
-//Auxiliary Space : O(1)
-class Solution{
-  public:
-int maximumSumSubarray(int K, vector<int> &Arr , int N){
-  int i=0;
-  int j=0;
-  int sum=0;
-  int mx=INT_MIN;
-  while (j<N){
-    sum=sum+Arr[j]; // do calculation to reduse tc
-    if (j-i+1<K) J++; // increament j upto when the size of the size of window is not equal to required size
-    else// when window size hit to the required window size
-    {
-      mx=max(mx,sum); // selecting ans from the candidates
-      sum=sum-Arr[i]; // start removing from the first
-      i++;
-      j++;
-    }
-  }
-  return mx;
-}
-};
-
-
-//9. First negative integer in every window of size k
-https://www.geeksforgeeks.org/problems/first-negative-integer-in-every-window-of-size-k3345/
-/*
-Time Complexity: O(n) 
-Auxiliary Space: O(k)
-*/
-vector<long long> printFirstNegativeInteger(long long int A[],long long int N, long long int K) {
- long long i=0;
- long long j=0;
- vector<long long> ans;
- list<long long> l;
-  while (j<N){
-    if (A[j]<0) 
-      l.push_back(A[j]);
-    if (j-i+1<K) j++;
-    else if ((j-i+1)==K)
-    {
-      if (l.size()==0)
-        ans.push_back(0);
-      else
-        ans.push_back(l.front());
-      if(A[i]<0)
-        l.pop_front();
-      i++;
-      j++;
-    }
-  }
-  return ans;
-}
-
-
-// 10. Count Occurences of anagrams
-https://www.geeksforgeeks.org/problems/count-occurences-of-anagrams5839/1
-
-class Solution{
-  public:
-  
-  int search(string pat, string txt) {
-  unordered_map <char, int> m;
-  for(auto i: pat)
-  m[i]++;
-
-  int k = pat.size();
-  int count = m.size();
-  int ans = 0;
-  int i = 0, j = 0;
-
-  while(j < txt.size()) {
-
-  if(m.find(txt[j]) != m.end()) {
-  m[txt[j]]--;
-
-  if(m[txt[j]] == 0)
-  count--;
-  }
-
-  if(j - i + 1 < k) j++;
-
-  else if(j - i + 1 == k) {
-  if(count == 0)
-  ans++;
-
-  if(m.find(txt[i]) != m.end()) {
-  m[txt[i]]++;
-
-  if(m[txt[i]] == 1)
-  count++;
-  }
-
-  i++; j++;
-  }
-  }
-
-  return ans;
-  }
-};
-
-// 11. Max of all subarrays of size K
-https://www.interviewbit.com/problems/sliding-window-maximum/
-class Solution {
-public:
-    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
-       vector<int> ans;
-        list<int> l;
-        int i=0;
-        int j=0;
-        
-        if (k>nums.size()) // edge case
-        {
-            ans.push_back(*max_element(l.begin(),l.end()));
-            return ans;
-        }
-        
-        while (j<nums.size())
-        {
-            while(l.size()>0 && l.back() <nums[j])
-            {
-                l.pop_back();
-            }
-            l.push_back(nums[j]);
-            if ((j-i+1)<k)
-                j++;
-            else if (j-i+1==k)
-            {
-                ans.push_back(l.front());
-                if (l.front()==nums[i])
-                    l.pop_front();
-                i++;
-                j++;
-            }
-            
-        }
-        return ans;
-    }
-};
-
-// 12. Longest substring With  K unique characters
-https://www.geeksforgeeks.org/problems/longest-k-unique-characters-substring0853/1
-
-
-int longestKSubstr(string &s, int k) {
-        // your code here
-       int i=0;
-       int j=0;
-       unordered_map<char,int>mp;
-       while(j<s.length())
-       {
-        mp[s[j]]++;
-        if(mp.size()<k)
-        {
-            j++;
-        }
-        else if(mp.size()==k)
-        {
-            mx=max(mx,j-i+1);
-            j++;
-        }
-        else if(mp.size()>k)
-        {
-            while(mp.size()>k)
-            {
-               mp[s[i]]--;
-               if(mp[s[i]]==0)
-               {
-                mp.erase(s[i]);
-               }
-               i++;
-            }
-            j++;
-        }
-       }
-
-        return mx;
-    }
-
-
-
-
-
-
-
-//13. Longest Substring without repeating  characters - means all unique characters
-https://leetcode.com/problems/longest-substring-without-repeating-characters/description/
-
-class Solution {
-public:
-    int lengthOfLongestSubstring(string s) {
-        unordered_map<char, int> mp;
-        int i=0;
-        int j=0;
-        int mx=INT_MIN;
-        if (s.size()==0) return 0;
-        while(j<s.size())
-        {
-            mp[s[j]]++;
-            if (mp.size()==j-i+1)
-            {
-                mx=max(mx,j-i+1);
-            }
-            else if (mp.size()<j-i+1)
-            {
-                while(mp.size()<j-i+1)
-                {
-                    mp[s[i]]--;
-                    if (mp[s[i]]==0)
-                    {
-                        mp.erase(s[i]);
-                    }
-                    i++;
-                }
-                
-            }
-            j++;
-        }
-        return mx;
-    }
-};
-

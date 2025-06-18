@@ -1,3 +1,5 @@
+
+
 // 1. Duplicate in array
 https://www.naukri.com/code360/problems/duplicate-in-array_893397
 
@@ -188,6 +190,50 @@ void mergeInto(vector<int>& A, int m, const vector<int>& B, int n) {
 }
 
 
+
+// Repeat and missing number array
+
+https://www.interviewbit.com/problems/repeat-and-missing-number-array/
+
+
+// this approch works for both more than one repeating and missing number
+
+
+Given an unsorted array of size n. Array elements are in the range from 1 to n. Some numbers from set {1, 2, …n} are missing and some are repeating in the array. Find these two numbers in order of one space.
+
+
+Input:[3 1 1 5 3]
+
+Duplicate = 3,1  Missing = 2,4 .
+
+#include <vector>
+using namespace std;
+
+// Returns a pair of vectors: {missing_numbers, duplicate_numbers}
+pair<vector<int>,vector<int>> findMissingAndDuplicates(vector<int>& A) {
+    int n = A.size();
+    // 1) Cyclic sort: place each number v in position v-1
+    for (int i = 0; i < n; ++i) {
+        // While A[i] is in [1..n], and not already in its correct spot,
+        // and not swapping a duplicate onto itself:
+        while (A[i] >= 1 && A[i] <= n && A[A[i]-1] != A[i]) {
+            swap(A[i], A[A[i]-1]);
+        }
+    }
+    // 2) Collect missing & duplicates
+    vector<int> missing, duplicates;
+    for (int i = 0; i < n; ++i) {
+        if (A[i] != i + 1) {
+            // i+1 didn't end up at index i → it's missing
+            missing.push_back(i + 1);
+            // whatever did end up here is a duplicate
+            duplicates.push_back(A[i]);
+        }
+    }
+    return { missing, duplicates };
+}
+
+
 //7. Kadane Algorithm
 https://leetcode.com/problems/maximum-subarray
 
@@ -204,6 +250,5 @@ public:
             sum=0;
         }
         return maxi;
-
     }
 };
