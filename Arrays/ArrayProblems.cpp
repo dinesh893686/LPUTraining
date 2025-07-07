@@ -252,3 +252,171 @@ public:
         return maxi;
     }
 };
+
+// longest Band
+https://leetcode.com/problems/longest-consecutive-sequence/description/
+
+#include<iostream>
+#include<vector>
+#include<unordered_set>
+using namespace std;
+
+int largestBand(vector<int> arr){
+	int n = arr.size();
+	unordered_set<int> s;
+
+	//Data inside a set
+	for(int x : arr){
+		s.insert(x);
+	}
+
+	//Iterate over the arr
+	int largestLen = 1;
+
+	for(auto element : s){
+		int parent = element - 1;
+
+		if(s.find(parent)==s.end()){
+			//find entire band / chain starting from element
+			int next_no = element + 1;
+			int cnt = 1;
+
+			while(s.find(next_no)!=s.end()){
+				next_no++;
+				cnt++;
+			}
+
+			if(cnt>largestLen){
+				largestLen = cnt;
+			}
+		}
+	}
+
+
+	return largestLen;
+}
+
+
+
+int main(){
+
+	vector<int> arr{1, 9, 3, 0, 18, 5, 2, 10, 7, 12, 6};
+	cout << largestBand(arr)<<endl;
+
+	return 0;
+}
+
+
+// Largest mountain in array
+https://leetcode.com/problems/longest-mountain-in-array/description/
+
+#include<iostream>
+#include<vector>
+using namespace std;
+
+
+int highest_mountain(vector<int> a){
+	int n = a.size();
+
+	int largest = 0;
+
+	for(int i=1;i<=n-2;){
+
+		//check a[i] is peak or not
+		if(a[i]>a[i-1] and a[i]>a[i+1]){
+			//do some work
+			int cnt = 1;
+			int j = i;
+			//cnt backwards (left)
+			while(j>=1 and a[j]>a[j-1]){
+				j--;
+				cnt++;
+			}
+			//cnt forwards (right)
+			while(i<=n-2 and a[i]>a[i+1]){
+				i++;
+				cnt++;
+			}
+			largest = max(largest,cnt);
+
+		}
+		else{
+			i++;
+		}
+	}
+	return largest;
+
+}
+
+int main(){
+
+	vector<int> arr{5,6,1,2,3,4,5,4,3,2,0,1,2,3,-2,4};
+
+	cout<< highest_mountain(arr)<<endl;
+
+
+
+	return 0;
+}
+
+// trapping rain water
+https://leetcode.com/problems/trapping-rain-water/description/
+
+// subarray sort
+https://leetcode.com/problems/shortest-unsorted-continuous-subarray/
+#include <iostream>
+#include<algorithm>
+#include <vector>
+using namespace std;
+
+bool outOfOrder(vector<int> arr,int i){
+	int x = arr[i];
+	if(i==0){
+		return x > arr[1];
+	}
+	if(i==arr.size()-1){
+		return x < arr[i-1];
+	}
+	return x > arr[i+1] or x < arr[i-1];
+
+}
+
+pair<int,int> subarraySort(vector<int> arr) {
+
+	int smallest = INT_MAX;
+	int largest = INT_MIN;
+
+	for(int i=0;i<arr.size();i++){
+		int x = arr[i];
+
+		if(outOfOrder(arr,i)){
+			smallest = min(smallest,x);
+			largest = max(largest,x);
+		}
+	}
+
+	//next step find the right index where smallest and largest lie (subarray) for out solution
+	if(smallest==INT_MAX){
+		return {-1,-1};
+	}
+
+	int left = 0;
+	while(smallest >= arr[left]){
+		left++;
+	}
+	int right = arr.size() - 1;
+	while(largest <= arr[right]){
+		right--;
+	}
+
+	return {left,right};
+
+}
+
+int main() {
+    vector<int> arr = {1, 2, 3, 4, 5, 8, 6, 7, 9, 10, 11};
+    auto p = subarraySort(arr);
+    cout<< p.first <<" and "<<p.second <<endl;
+
+    return 0;
+}

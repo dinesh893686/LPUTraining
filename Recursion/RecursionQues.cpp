@@ -182,7 +182,7 @@ public:
         {
             return 0;
         }
-        int mid=pow(2,n-1);
+        int mid=pow(2,n-1)/2;
         if(k<=mid)
         {
             return kthGrammar(n-1,k);
@@ -193,9 +193,7 @@ public:
 };
 
 
-Print Subsets | Print PowerSets | Print all Subsequences
-
-
+// Print Subsets | Print PowerSets | Print all Subsequences
 
 https://www.geeksforgeeks.org/print-subsequences-string/
 
@@ -227,7 +225,10 @@ public:
     }
 };
 
+
 //9.Print Unique Subsets
+
+
 
 
 // 10. Permutations with spaces
@@ -265,6 +266,45 @@ public:
 
 //11. Permutation with case changes
 https://www.geeksforgeeks.org/permute-string-changing-case/
+class Solution {
+public:
+    void getSolved(string s,string op,vector<string> &result)
+    {
+        if(s.length()==0)
+        {
+            result.push_back(op);
+            return;
+        }
+
+        if(is digit(s[0]))
+        {
+            string op1=op;
+            op1.push_back(s[0]);
+            s.erase(s.begin());
+            getSolved(s,op1,result);
+        }
+        else
+        {
+            string op1=op;
+            string op2=op;
+            op1.push_back(tolower(s[0]));
+            op2.push_back(toupper(s[0]));
+            s.erase(s.begin());
+            getSolved(s,op1,result);
+            getSolved(s,op2,result);
+        }
+
+        return;
+    }
+    vector<string> letterCasePermutation(string s) {
+        vector<string> result;
+        string op;
+        getSolved(s,op,result);
+        return result;
+    }
+};
+
+
 
 //12.Letter case Permutation
 https://leetcode.com/problems/letter-case-permutation/description/

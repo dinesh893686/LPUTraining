@@ -47,24 +47,6 @@ int main() {
     return 0;
 }
 
-// https://leetcode.com/problems/find-peak-element/description/
-int findPeak(int arr[], int n) {
-
-    int s =0, e = n-1;
-    int mid = s + (e-s)/2;
-
-    while(s<e) {
-        //cout<<" s " << s <<" e " << e << endl;
-        if(arr[mid] < arr[mid+1]){
-            s = mid+1; 
-        }
-        else{
-            e = mid;
-        }
-        mid = s + (e-s)/2;
-    }
-    return s;
-}
 
 //1. Find fast and last occurance 
 https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/description/
@@ -155,6 +137,28 @@ public:
     }
 };
 
+
+// https://leetcode.com/problems/find-peak-element/description/
+int findPeak(int arr[], int n) {
+
+    int s =0, e = n-1;
+    int mid = s + (e-s)/2;
+
+    while(s<e) {
+        //cout<<" s " << s <<" e " << e << endl;
+        if(arr[mid] < arr[mid+1]){
+            s = mid+1;
+        }
+        else{
+            e = mid;
+        }
+        mid = s + (e-s)/2;
+    }
+    return s;
+}
+
+
+
 // 4. Search in sorted and rotated array
 https://www.naukri.com/code360/problems/search-in-rotated-sorted-array_1082554
 
@@ -221,7 +225,7 @@ int findPosition(vector<int>& arr, int n, int k)
     {//BS on first line
         return binarySearch(arr, 0, pivot - 1, k);
     }
-    
+
 }
 
 //5. Square Root of number using binary Search
@@ -404,12 +408,10 @@ int findPosition(vector<int>& arr, int n, int k)
 {
     int s = 0;
     int e = 1;
-    int mid = s + (e-s)/2;
 
     while(arr[e] < k) {
         s = e;
         e = e*2;
-        mid = s + (e-s)/2;
     }
     return binarySearch(arr, s, e, k);
 }
@@ -421,17 +423,13 @@ https://www.geeksforgeeks.org/dsa/find-index-first-1-infinite-sorted-array-0s-1s
 int findFirstOne(vector<int>& arr) {
     int s = 0;
     int e = 1;
-    int mid = s + (e-s)/2;
 
     while(arr[e] == 0) {
         s = e;
         e = e*2;
-        mid = s + (e-s)/2;
     }
 
     // just here will be some chnages that you have to find 1 instead of k and that is first occcurance means code will be same to find first occurance
-
-
     return binarySearch(arr, s, e, 1);
 }
 
@@ -496,3 +494,153 @@ int allocateBooks(vector<int> arr, int n, int m) {
 
 //6. Painters Partition Problem
 https://www.naukri.com/code360/problems/painter's-partition-problem_1089557
+
+
+
+//Given a sorted array, find the element in the array which has minimum difference with the given number. .
+
+// absolute difference
+
+
+#include <iostream>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+int findClosestElement(const vector<int>& arr, int target) {
+    int n = arr.size();
+    int low = 0, high = n - 1;
+
+    // Handle edge cases
+    if (target <= arr[0])
+        return arr[0];
+    if (target >= arr[n - 1])
+        return arr[n - 1];
+
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+
+        if (arr[mid] == target)
+            return arr[mid];
+
+        if (arr[mid] < target)
+            low = mid + 1;
+        else
+            high = mid - 1;
+    }
+
+    // After loop, low is next greater, high is next smaller
+    if (abs(arr[low] - target) < abs(arr[high] - target))
+        return arr[low];
+    else
+        return arr[high];
+}
+
+int main() {
+    vector<int> arr = {1, 3, 8, 10, 15};
+    int target = 12;
+    cout << "Closest element to " << target << " is " << findClosestElement(arr, target) << endl;
+
+    return 0;
+}
+
+// Sea
+https://www.geeksforgeeks.org/problems/search-in-a-matrix17201720/1
+
+🔗 Problem Link
+👉 Search in a Matrix (GFG)
+
+You're given an n x m matrix where each row and each column is sorted in increasing order. Find if a given target exists in the matrix.
+
+💡 Why start at (i=0, j=m-1)?
+📌 When you start at the top-right corner:
+
+The element at mat[0][m-1] is:
+
+The largest in its row
+
+The smallest in its column
+
+✅ This gives you maximum elimination power at each step:
+
+If target == mat[i][j]: found it!
+
+If target < mat[i][j]: move left (since all elements to the left are smaller)
+
+If target > mat[i][j]: move down (since all elements below are larger)
+
+⚡ This approach eliminates one row or one column at a time, reducing search space efficiently in O(n + m) time.
+
+💻 C++ Solution
+cpp
+Copy
+Edit
+#include <iostream>
+#include <vector>
+using namespace std;
+
+bool searchMatrix(vector<vector<int>>& matrix, int n, int m, int target) {
+    int i = 0, j = m - 1;
+
+    while (i < n && j >= 0) {
+        if (matrix[i][j] == target) {
+            return true;
+        }
+        else if (matrix[i][j] > target) {
+            j--; // Move left
+        }
+        else {
+            i++; // Move down
+        }
+    }
+
+    return false;
+}
+
+int main() {
+    vector<vector<int>> matrix = {
+        {1, 4, 7, 11},
+        {2, 5, 8, 12},
+        {3, 6, 9, 16},
+        {10, 13, 14, 17}
+    };
+
+    int n = matrix.size();
+    int m = matrix[0].size();
+    int target = 5;
+
+    if (searchMatrix(matrix, n, m, target)) {
+        cout << "Element found!" << endl;
+    } else {
+        cout << "Element not found." << endl;
+    }
+
+    return 0;
+}
+
+
+⌛ Time Complexity
+scss
+Copy
+Edit
+O(n + m)
+Each move eliminates a row or column.
+
+📌 Key Idea Recap
+We start at top-right (0, m-1) because:
+
+From there, we can efficiently decide to go left (smaller values) or down (larger values).
+
+Starting at bottom-left (n-1, 0) would work similarly but flipped directions.
+
+👉 If you want this in another language (Python, Java) or to return coordinates, just say the word! 🚀
+
+
+
+
+
+
+
+
+
+

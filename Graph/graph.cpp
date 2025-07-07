@@ -23,6 +23,76 @@ targetPos[ ] = {1, 1}
 Output:
 3
 
+#include <iostream>
+#include <queue>
+#include <vector>
+using namespace std;
+
+// Structure to hold knight position and distance
+struct Cell {
+    int x, y, dist;
+};
+
+// All 8 possible moves for a knight
+int dx[] = { -2, -1, 1, 2, 2, 1, -1, -2 };
+int dy[] = { 1, 2, 2, 1, -1, -2, -2, -1 };
+
+// Function to check if position is valid on board
+bool isValid(int x, int y, int N) {
+    return (x >= 0 && x < N && y >= 0 && y < N);
+}
+
+int minKnightMoves(int N, pair<int, int> start, pair<int, int> target) {
+    vector<vector<bool>> visited(N, vector<bool>(N, false));
+    queue<Cell> q;
+
+    q.push({ start.first, start.second, 0 });
+    visited[start.first][start.second] = true;
+
+    while (!q.empty()) {
+        Cell current = q.front();
+        q.pop();
+
+        if (current.x == target.first && current.y == target.second) {
+            return current.dist;
+        }
+
+        for (int i = 0; i < 8; i++) {
+            int nx = current.x + dx[i];
+            int ny = current.y + dy[i];
+
+            if (isValid(nx, ny, N) && !visited[nx][ny]) {
+                visited[nx][ny] = true;
+                q.push({ nx, ny, current.dist + 1 });
+            }
+        }
+    }
+
+    return -1; // Target not reachable
+}
+
+int main() {
+    int N;
+    cout << "Enter board size N: ";
+    cin >> N;
+
+    int sx, sy, tx, ty;
+    cout << "Enter start position (x y): ";
+    cin >> sx >> sy;
+    cout << "Enter target position (x y): ";
+    cin >> tx >> ty;
+
+    int result = minKnightMoves(N, {sx, sy}, {tx, ty});
+    if (result != -1)
+        cout << "Minimum steps required: " << result << endl;
+    else
+        cout << "Target is not reachable." << endl;
+
+    return 0;
+}
+
+
+
 
 //  Reorder Routes to Make All Paths Lead to the City Zero
 https://leetcode.com/problems/reorder-routes-to-make-all-paths-lead-to-the-city-zero/description/
@@ -35,6 +105,12 @@ https://www.geeksforgeeks.org/problems/eventual-safe-states/1
 
 //5. Longest Cycle in a Graph
 https://leetcode.com/problems/longest-cycle-in-a-graph/description/
+
+// Shortest Cycle in a graph
+https://leetcode.com/problems/shortest-cycle-in-a-graph/description/
+
+
+
 
 
 //6. 
@@ -68,3 +144,29 @@ Example 1:
 Input: numCourses = 2, prerequisites = [[1,0]]
 Output: [0,1]
 Explanation: There are a total of 2 courses to take. To take course 1 you should have finished course 0. So the correct course order is [0,1].
+
+// 8. Largest Color Value in a Directed Graph
+// https://leetcode.com/problems/largest-color-value-in-a-directed-graph/description/
+
+
+
+// 9.
+// Flood Fill
+https://leetcode.com/problems/flood-fill/description/
+
+
+//10.
+// Number oF islands
+
+https://leetcode.com/problems/number-of-islands/description/
+
+
+// 11.
+Rotting Oranges
+https://leetcode.com/problems/rotting-oranges/description/
+
+//12 Geeks Village and Wells
+https://www.geeksforgeeks.org/problems/geeks-village-and-wells--170647/1
+
+
+

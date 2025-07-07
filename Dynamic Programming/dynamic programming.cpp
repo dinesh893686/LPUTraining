@@ -834,6 +834,32 @@ int main() {
 // https://www.geeksforgeeks.org/longest-common-substring-dp-29/
 
 
+
+// https://leetcode.com/problems/jump-game-ii/description/
+
+
+int min_jumps(vector<int>arr, int n,vector<int>dp,int i) {
+	int dp[n + 1]; // DP - matrix
+
+	// base case of recursion --> for initialization of dp - matrix
+	for (int i = 0; i <= n; i++)
+		if (i == 0)
+			dp[i] = 0;
+		else
+			dp[i] = INT_MAX;
+
+	for (int i = 1; i <= n; i++) {
+		for (int j = 0; j < i; j++) {
+			if (arr[j] + j >= i)
+				dp[i] = min(dp[i], dp[j] + 1);
+		}
+	}
+
+	return dp[n];
+}
+
+
+
 //  Print LCS
 // https://www.geeksforgeeks.org/printing-longest-common-subsequence/
 #include <bits/stdc++.h>
@@ -999,9 +1025,6 @@ signed main() {
 }
 
 //minimum number of deletions to make a string a palindrome
-
-
-
 #include <bits/stdc++.h>
 using namespace std;
 

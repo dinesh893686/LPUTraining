@@ -127,6 +127,26 @@ https://www.geeksforgeeks.org/problems/height-of-binary-tree/1
 https://www.geeksforgeeks.org/problems/height-of-binary-tree/1
 
 
+// brute force
+int height(TreeNode* root) {
+    if (root == NULL) return 0;
+    return 1 + max(height(root->left), height(root->right));
+}
+
+int diameter(TreeNode* root) {
+    if (root == NULL) return 0;
+
+    int leftHeight = height(root->left);
+    int rightHeight = height(root->right);
+
+    int diaThroughRoot = leftHeight + rightHeight;
+
+    int leftDia = diameter(root->left);
+    int rightDia = diameter(root->right);
+
+    return max(diaThroughRoot, max(leftDia, rightDia));
+}
+
 class Solution {
  
   public:
@@ -1035,5 +1055,208 @@ int minTime(Node* root,int target)
     return ans;
 }
 
+// Morris Traversal
+https://www.geeksforgeeks.org/problems/inorder-traversal/1
+Why use Morris Traversal?
+Normally, tree traversals like inorder, preorder, etc., use:
 
+Recursion → consumes O(h) stack space (where h is tree height)
+
+Explicit stack → also O(h) extra memory
+
+📌 Morris Traversal avoids both by temporarily modifying the tree using threaded binary tree logic — and then restores it back.
+
+🔄 Basic Idea
+For each node:
+
+If it has no left child: Visit the node and go right.
+
+If it has a left child:
+
+Find the rightmost node (inorder predecessor) in its left subtree.
+
+Make the right pointer of that node point back to the current node (threading).
+
+Move to the left child.
+
+On second visit (when thread is encountered), remove the thread and move right.
+
+👨‍💻 Morris Inorder Traversal (Step-by-step):
+
+
+void morrisInorder(Node* root) {
+    Node* current = root;
+
+    while (current != NULL) {
+        if (current->left == NULL) {
+            // Case 1: No left child — visit and go right
+            cout << current->data << " ";
+            current = current->right;
+        } else {
+            // Case 2: Find inorder predecessor
+            Node* predecessor = current->left;
+            while (predecessor->right != NULL && predecessor->right != current) {
+                predecessor = predecessor->right;
+            }
+
+            if (predecessor->right == NULL) {
+                // Threading: link predecessor to current
+                predecessor->right = current;
+                current = current->left;
+            } else {
+                // Already threaded: remove link and visit
+                predecessor->right = NULL;
+                cout << current->data << " ";
+                current = current->right;
+            }
+        }
+    }
+}
+
+
+https://www.spoj.com/problems/UCV2013J/
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+    // Process input continuously until N = 0, which marks the end
+    while (true) {
+        int N;
+        cin >> N; // Read the number of nodes in the tree
+
+        // If N is 0, end of input, break the loop
+        if (N == 0) {
+            break;
+        }
+
+        // Vector to store the valences of each node
+        vector<int> valences(N);
+
+        // Read the valences of the nodes
+        for (int i = 0; i < N; ++i) {
+            cin >> valences[i]; // Read valence for each node
+        }
+
+        // Initialize sum to 0
+        int sum = 0;
+
+        // Leaf nodes in a complete binary tree are from index N/2 to N-1 in the array
+        // Traverse the array from N/2 to N-1 to sum the valences of leaf nodes
+        for (int i = N / 2; i < N; ++i) {
+            sum += valences[i]; // Add valence of each leaf node to sum
+        }
+
+        // Output the sum of valences of the leaf nodes
+        cout << sum << endl;
+    }
+
+    return 0; // End of program
+}
+
+//https://codeforces.com/contest/913/problem/B
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+    int n; // number of vertices (nodes)
+    while (cin >> n && n != 0) {
+        vector<vector<int>> tree(n + 1); // tree representation using an adjacency list
+        // Read the parent-child relationships
+        for (int i = 2; i <= n; ++i) {
+            int parent;
+            cin >> parent;
+            tree[parent].push_back(i); // Add child i to parent node
+        }
+
+        bool isSpruce = true; // Initially assume it's a spruce tree
+        // Check the non-leaf nodes
+        for (int i = 1; i <= n; ++i) {
+            if (tree[i].size() > 0) { // If node i has children (it's a non-leaf node)
+                int leafCount = 0;
+                for (int child : tree[i]) {
+                    if (tree[child].empty()) { // Check if the child is a leaf
+                        leafCount++;
+                    }
+                }
+                if (leafCount < 3) {
+                    isSpruce = false; // If any non-leaf node has fewer than 3 leaf children, it's not a spruce
+                    break;
+                }
+            }
+        }
+
+        if (isSpruce)
+            cout << "Yes" << endl;
+        else
+            cout << "No" << endl;
+    }
+    return 0;
+}
+
+
+https://www.spoj.com/problems/TREEDEGREE/
+
+
+
+//
+//  main.cpp
+//  practice
+//
+//  Created by Mahmud on 10/13/18.
+//  Copyright © 2018 Mahmud. All rights reserved.
+//
+
+/*
+ A simple O(T * N) solution
+ Problem can be solved using dfs or some other techniques as well.
+ */
+
+#include <iostream>
+#include <stack>
+#include <algorithm>
+
+using namespace std;
+
+const int S = 1 << 18;
+
+int T, N;
+int order[S];
+int was[S], neighbors[S];
+
+int main(int argc, const char * argv[]) {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+
+    cin >> T;
+    while (T --) {
+        cin >> N;
+        for (int i = 1; i <= N + N; i ++) {
+            cin >> order[i];
+        }
+        for (int i = 1; i <= N; i ++) {
+            neighbors[i] = 0;
+            was[i] = 0;
+        }
+        stack<int> open;
+        for (int i = 1; i <= N + N; i ++) {
+            if (!was[order[i]]) {
+                if (!open.empty()) {
+                    neighbors[open.top()] ++;
+                    neighbors[order[i]] ++;
+                }
+                was[order[i]] = 1;
+                open.push(order[i]);
+            } else {
+                open.pop();
+            }
+        }
+        cout << *max_element(neighbors, neighbors + N + 1) << endl;
+    }
+
+    return 0;
+}
 
