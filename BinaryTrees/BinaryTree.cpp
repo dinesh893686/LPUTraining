@@ -1198,6 +1198,7 @@ int main() {
 }
 
 
+
 https://www.spoj.com/problems/TREEDEGREE/
 
 
@@ -1259,4 +1260,65 @@ int main(int argc, const char * argv[]) {
 
     return 0;
 }
+
+
+
+
+// https://www.spoj.com/problems/GCPC11J/
+
+#include <bits/stdc++.h>
+using namespace std;
+
+// BFS from src, fills dist[], and returns the node farthest from src.
+int bfs(int src, const vector<vector<int>>& adj, vector<int>& dist) {
+    int N = adj.size();
+    dist.assign(N, -1);
+    queue<int> q;
+    q.push(src);
+    dist[src] = 0;
+
+    int far = src;
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+        for (int v : adj[u]) {
+            if (dist[v] == -1) {
+                dist[v] = dist[u] + 1;
+                q.push(v);
+                if (dist[v] > dist[far])
+                    far = v;
+            }
+        }
+    }
+    return far;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int N;
+    cin >> N;                     // number of computers (nodes)
+    vector<vector<int>> adj(N);
+    for (int i = 0; i < N - 1; i++) {
+        int a, b;
+        cin >> a >> b;            // edge between a and b
+        adj[a].push_back(b);
+        adj[b].push_back(a);
+    }
+
+    vector<int> dist;
+    // 1) BFS from node 0 to find one end of the diameter
+    int u = bfs(0, adj, dist);
+    // 2) BFS from u to find the true diameter D = dist[v]
+    int v = bfs(u, adj, dist);
+    int D = dist[v];
+
+    // 3) Radius = ceil(D/2) = (D+1)/2
+    int radius = (D + 1) / 2;
+    cout << radius << "\n";
+
+    return 0;
+}
+
 

@@ -837,25 +837,37 @@ int main() {
 
 // https://leetcode.com/problems/jump-game-ii/description/
 
+int min_jumps(vector<int>arr, int n, vector<int>dp,int i)
+{
+   if(i==n-1)
+   {
+      return 0;
 
-int min_jumps(vector<int>arr, int n,vector<int>dp,int i) {
-	int dp[n + 1]; // DP - matrix
+   }
+   if(i>=n)
+   {
+   return INT_MAX;
+   }
 
-	// base case of recursion --> for initialization of dp - matrix
-	for (int i = 0; i <= n; i++)
-		if (i == 0)
-			dp[i] = 0;
-		else
-			dp[i] = INT_MAX;
+   //rec case
+   if(dp[i]!=0)
+   {
+   return dp[i];
+   }
+   //assume
+   int steps=INT_MAX;
+   int max_jump= arr[i];
+   for(int jump=1; jump<=max_jump; jump++)
+   {
+   int next_cell= i+jump;
+   int subprob= min_jumps(arr,n,dp,next_cell);
+   if(subprob!=INT_MAX)
+   {
+   steps= min(steps,subprob+1);
+   }
+   }
+   return dp[i]=steps;
 
-	for (int i = 1; i <= n; i++) {
-		for (int j = 0; j < i; j++) {
-			if (arr[j] + j >= i)
-				dp[i] = min(dp[i], dp[j] + 1);
-		}
-	}
-
-	return dp[n];
 }
 
 
@@ -907,6 +919,23 @@ signed main() {
 	cout << LCS(X, Y, n, m) << endl;
 	return 0;
 }
+
+
+//Frog's Min Cost
+There are N stones given in the form an array , each element in array represents the height of the stone.There is a frog who is initially on the first stone. Frog will repeat the following action some number of times to reach stone N:
+If the frog is currently on stone i, he can jump to stone i+1 or stone i+2.
+Here , a cost of |hi - hj| is incurred when the frog jumps from stone i to stone j.
+Find the minimum possible total cost incurred before the frog reaches stone N.
+
+
+
+
+
+
+
+
+
+
 
 
 // Shortest Common Supersequence
@@ -1128,6 +1157,8 @@ int main() {
 }
 
 //  https://www.geeksforgeeks.org/longest-repeating-subsequence/
+
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -1156,6 +1187,8 @@ signed main() {
 	cout << LCS(X, X, n, n) << endl;
 	return 0;
 }
+
+
 // https://leetcode.com/problems/is-subsequence/description/
 #include <bits/stdc++.h>
 using namespace std;
@@ -1191,7 +1224,8 @@ signed main() {
 	return 0;
 }
 
-//Dynamic Programming/26 Minimum Number of insertion to make a string palindrome.cpp
+//Dynamic Programming
+//26 Minimum Number of insertion to make a string palindrome.cpp
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -1744,3 +1778,6 @@ int main() {
 	cout << Solve(eggs, floors) << endl;
 	return 0;
 }
+
+
+//
