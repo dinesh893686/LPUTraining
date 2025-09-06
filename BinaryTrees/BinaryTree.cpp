@@ -755,7 +755,7 @@ class Solution
 https://www.geeksforgeeks.org/problems/k-sum-paths/1
 class Solution{
   public:
-    void solve(Node* root, int k, int &count, vector<int> path) {
+    void solve(Node* root, int k, int &count, vector<int> &path) {
         //base case
         if(root == NULL)
             return ;

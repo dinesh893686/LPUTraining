@@ -93,24 +93,18 @@ int main() {
 
 
 
-
 //  Reorder Routes to Make All Paths Lead to the City Zero
 https://leetcode.com/problems/reorder-routes-to-make-all-paths-lead-to-the-city-zero/description/
 
 
-
 //4. Eventual safe states
 https://www.geeksforgeeks.org/problems/eventual-safe-states/1
-
 
 //5. Longest Cycle in a Graph
 https://leetcode.com/problems/longest-cycle-in-a-graph/description/
 
 // Shortest Cycle in a graph
 https://leetcode.com/problems/shortest-cycle-in-a-graph/description/
-
-
-
 
 
 //6. 
@@ -148,8 +142,6 @@ Explanation: There are a total of 2 courses to take. To take course 1 you should
 // 8. Largest Color Value in a Directed Graph
 // https://leetcode.com/problems/largest-color-value-in-a-directed-graph/description/
 
-
-
 // 9.
 // Flood Fill
 https://leetcode.com/problems/flood-fill/description/
@@ -165,8 +157,27 @@ https://leetcode.com/problems/number-of-islands/description/
 Rotting Oranges
 https://leetcode.com/problems/rotting-oranges/description/
 
+
+
 //12 Geeks Village and Wells
 https://www.geeksforgeeks.org/problems/geeks-village-and-wells--170647/1
 
+// 13. Number of operations to make network connected
+https://leetcode.com/problems/number-of-operations-to-make-network-connected/description/
+
+// Dijkstra algorithm coverage
+
+
+// 13.
+https://leetcode.com/problems/cheapest-flights-within-k-stops/description/
+
+
+14. https://leetcode.com/problems/network-delay-time/description/
+
+15.
+https://leetcode.com/problems/path-with-maximum-probability/description/
+
+16.
+https://leetcode.com/problems/minimum-cost-to-connect-two-groups-of-points/description/
 
 
