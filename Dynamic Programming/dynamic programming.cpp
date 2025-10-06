@@ -1787,6 +1787,8 @@ int main() {
 //
 https://leetcode.com/problems/maximum-height-by-stacking-cuboids/description/
 
+
+
 // Wine Selling Problem
 
 Problem Statement
@@ -1800,8 +1802,6 @@ Output: 64
 
 Explanation:
 
-
-
 price = 2*1 = 2, remaining WinePrice = [ 4, 6, 2, 5 ], Profit = 2
 price = 5*2 = 10, remaining WinePrice = [ 4, 6, 2 ], Profit = 12
 price = 2*3 = 6, remaining WinePrice = [ 4, 6], Profit = 18
@@ -1810,4 +1810,6 @@ price = 6*5 = 30, remaining WinePrice = [ ], Profit = 64
 
 
 
+Count Square Submatrices with All Ones
+// https://leetcode.com/problems/count-square-submatrices-with-all-ones/description/
 
