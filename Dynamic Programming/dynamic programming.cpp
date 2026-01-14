@@ -1813,3 +1813,173 @@ price = 6*5 = 30, remaining WinePrice = [ ], Profit = 64
 Count Square Submatrices with All Ones
 // https://leetcode.com/problems/count-square-submatrices-with-all-ones/description/
 
+
+
+
+// https://leetcode.com/problems/minimum-cost-to-cut-a-stick/description/
+
+Given a wooden stick of length n units. The stick is labelled from 0 to n. For example, a stick of length 6 is labelled as follows:
+
+
+Given an integer array cuts where cuts[i] denotes a position you should perform a cut at.
+
+You should perform the cuts in order, you can change the order of the cuts as you wish.
+
+The cost of one cut is the length of the stick to be cut, the total cost is the sum of costs of all cuts. When you cut a stick, it will be split into two smaller sticks (i.e. the sum of their lengths is the length of the stick before the cut). Please refer to the first example for a better explanation.
+
+Return the minimum total cost of the cuts.
+
+ 
+
+Example 1:
+
+Input: n = 7, cuts = [1,3,4,5]
+Output: 16
+Explanation: Using cuts order = [1, 3, 4, 5] as in the input leads to the following scenario:
+
+The first cut is done to a rod of length 7 so the cost is 7. The second cut is done to a rod of length 6 (i.e. the second part of the first cut), the third is done to a rod of length 4 and the last cut is to a rod of length 3. The total cost is 7 + 6 + 4 + 3 = 20.
+Rearranging the cuts to be [3, 5, 1, 4] for example will lead to a scenario with total cost = 16 (as shown in the example photo 7 + 4 + 3 + 2 = 16).
+Example 2:
+
+Input: n = 9, cuts = [5,6,1,4,2]
+Output: 22
+Explanation: If you try the given cuts ordering the cost will be 25.
+There are much ordering with total cost <= 25, for example, the order [4, 6, 5, 2, 1] has total cost = 22 which is the minimum possible.
+ 
+
+Constraints:
+
+2 <= n <= 106
+1 <= cuts.length <= min(n - 1, 100)
+1 <= cuts[i] <= n - 1
+
+SOLUTION - INTERVAL DYNAMIC PROGRAMMING:
+
+Key Insight: This is an interval DP problem. The order of cuts matters!
+- When we make a cut, the cost is the current stick length
+- After a cut, we work with two independent subproblems (left and right pieces)
+- We need to try all possible "last cuts" and pick the minimum
+
+Approach:
+1. Add boundaries: cuts = [0] + sorted(cuts) + [n]
+2. dp[i][j] = minimum cost to make all cuts between position cuts[i] and cuts[j]
+3. For segment [i, j], try each cut k in between as the "last cut"
+   - Cost = (cuts[j] - cuts[i]) + dp[i][k] + dp[k][j]
+   - The length (cuts[j] - cuts[i]) is added because this is the cost of making the last cut
+4. Build from smaller segments to larger ones
+*/
+
+class Solution {
+public:
+    // Method 1: Top-Down DP with Memoization
+    int minCost_Memoization(int n, vector<int>& cuts) {
+        // Add boundaries and sort
+        cuts.push_back(0);
+        cuts.push_back(n);
+        sort(cuts.begin(), cuts.end());
+        
+        int m = cuts.size();
+        vector<vector<int>> dp(m, vector<int>(m, -1));
+        
+        return solve(0, m - 1, cuts, dp);
+    }
+    
+    int solve(int i, int j, vector<int>& cuts, vector<vector<int>>& dp) {
+        // Base case: no cuts between i and j
+        if (j - i <= 1) return 0;
+        
+        if (dp[i][j] != -1) return dp[i][j];
+        
+        int minCost = INT_MAX;
+        
+        // Try each position k as a cut point
+        for (int k = i + 1; k < j; k++) {
+            // Cost of cutting at k + cost of left part + cost of right part
+            int cost = (cuts[j] - cuts[i]) + solve(i, k, cuts, dp) + solve(k, j, cuts, dp);
+            minCost = min(minCost, cost);
+        }
+        
+        return dp[i][j] = minCost;
+    }
+    
+    // Method 2: Bottom-Up DP (Tabulation)
+    int minCost(int n, vector<int>& cuts) {
+        // Add boundaries and sort
+        cuts.push_back(0);
+        cuts.push_back(n);
+        sort(cuts.begin(), cuts.end());
+        
+        int m = cuts.size();
+        vector<vector<int>> dp(m, vector<int>(m, 0));
+        
+        // Build from smaller segments to larger ones
+        // length represents the number of elements between i and j
+        for (int length = 2; length < m; length++) {
+            for (int i = 0; i + length < m; i++) {
+                int j = i + length;
+                dp[i][j] = INT_MAX;
+                
+                // Try each position k as a cut point
+                for (int k = i + 1; k < j; k++) {
+                    int cost = (cuts[j] - cuts[i]) + dp[i][k] + dp[k][j];
+                    dp[i][j] = min(dp[i][j], cost);
+                }
+            }
+        }
+        
+        return dp[0][m - 1];
+    }
+};
+
+/*
+DRY RUN Example: n = 7, cuts = [1, 3, 4, 5]
+
+Step 1: Add boundaries and sort
+cuts = [0, 1, 3, 4, 5, 7]
+indices: 0  1  2  3  4  5
+
+Step 2: Build DP table
+dp[i][j] = minimum cost to cut stick from cuts[i] to cuts[j]
+
+Length = 2 (adjacent elements, no cuts between):
+dp[0][1] = 0, dp[1][2] = 0, dp[2][3] = 0, dp[3][4] = 0, dp[4][5] = 0
+
+Length = 3 (one cut between):
+dp[0][2]: segment [0,3], cut at 1
+  cost = (3-0) + dp[0][1] + dp[1][2] = 3 + 0 + 0 = 3
+
+dp[1][3]: segment [1,4], cut at 3
+  cost = (4-1) + dp[1][2] + dp[2][3] = 3 + 0 + 0 = 3
+
+... and so on
+
+Final answer: dp[0][5] = minimum cost for entire stick
+
+Time Complexity: O(m^3) where m = cuts.length + 2
+Space Complexity: O(m^2)
+
+WHY THIS WORKS:
+- We consider each possible "last cut" in a segment
+- The cost of the last cut is the length of that segment
+- After making a cut, left and right parts are independent subproblems
+- By trying all possibilities and taking minimum, we get optimal answer
+
+Similar Problems:
+- Matrix Chain Multiplication
+- Burst Balloons
+- Minimum Cost Tree From Leaf Values
+*/
+
+void test_minCostToCutStick() {
+    Solution sol;
+    
+    // Test case 1
+    vector<int> cuts1 = {1, 3, 4, 5};
+    cout << "Test 1 - n=7, cuts=[1,3,4,5]: " << sol.minCost(7, cuts1) << endl;
+    // Expected: 16
+    
+    // Test case 2
+    vector<int> cuts2 = {5, 6, 1, 4, 2};
+    cout << "Test 2 - n=9, cuts=[5,6,1,4,2]: " << sol.minCost(9, cuts2) << endl;
+    // Expected: 22
+}
