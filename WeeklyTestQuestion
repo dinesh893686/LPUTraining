@@ -6,45 +6,60 @@ Allowed Languages: C++ / Java / Python
 
 📌 Problem Statement
 
-A data center records CPU load values (integers) at regular time intervals.
-You are asked to analyze this sequence to derive meaningful insights about system behavior and stability.
+A data center continuously records CPU load values (integers) at fixed time intervals.
+You are asked to build a load analysis module that helps engineers understand system stress, historical dominance, and stability behavior.
+
+Given a sequence of recorded load values and a few configuration parameters, your task is to analyze the data and report multiple observations.
 
 🔢 Input Description
 
 You are given:
 
-An integer N — the number of recorded load values
+An integer N — number of recorded load values
 
 A sequence of integers load[] of length N
 
-An integer K — a positive integer
+An integer K — segment length
 
-An integer T — a threshold value
+An integer T — reference load limit
 
-An integer D — a positive integer
+An integer D — required length of continuous stability
 
-🎯 Required Output
+🎯 What Your Program Must Do
 
-You must compute and output three results, in the order described below.
+Your program must analyze the input and produce four outputs, each derived from the same input data and previous observations.
 
-Result 1
+1️⃣ Segment Load Summary
 
-Consider all possible consecutive segments of the input sequence having length K.
-For each such segment, determine a single representative value equal to the highest load observed within that segment.
+The recorded data is divided into all possible consecutive segments of length K.
 
-Output these representative values in the order in which the segments appear.
+For each segment, compute a single value representing the highest load observed during that segment.
 
-Result 2
+These values must be reported in the order in which the segments occur.
 
-For each position in the input sequence, identify the nearest earlier position where the recorded load is strictly greater than the load at the current position.
+2️⃣ Historical Load Dominance
 
-If no such position exists, output -1 for that index.
+For every time position in the input sequence, determine whether there exists an earlier time position with a strictly higher load.
 
-Result 3
+If such a position exists, report the closest earlier index where this happens.
+If it does not exist, report -1.
 
-Using the sequence obtained in Result 1, determine the earliest position from which there exist at least D consecutive values that do not exceed the threshold T.
+3️⃣ Stable Operating Period Detection
 
-If no such position exists, output -1.
+Using the segment summary obtained earlier, determine the earliest segment position from which the system can operate continuously within acceptable limits.
+
+A segment is considered acceptable if its summarized value does not exceed the given reference limit T.
+
+Report the earliest position from which at least D such acceptable segments occur consecutively.
+If no such position exists, report -1.
+
+4️⃣ Minimum Required Load Tolerance
+
+In some cases, the acceptable load limit is not known beforehand.
+
+Using the same segment summary, determine the smallest possible load limit for which the system can operate acceptably for at least D consecutive segments.
+
+Report this minimum required load limit.
 
 📥 Input Format
 N
@@ -54,48 +69,23 @@ T
 D
 
 📤 Output Format
-Line 1: Space-separated integers corresponding to Result 1
-Line 2: Space-separated integers corresponding to Result 2
-Line 3: A single integer corresponding to Result 3
+Line 1: Segment summary values
+Line 2: Historical dominance indices
+Line 3: Earliest stable segment position
+Line 4: Minimum required load limit
 
-🧪 Sample Test Case 1
-Input
+🧪 Sample Input
 8
 10 5 2 7 8 7 6 5
 3
 8
 2
 
-Output
+🧪 Sample Output
 10 7 8 8 8 7
 -1 0 1 0 0 4 5 6
 2
-
-🧪 Sample Test Case 2
-Input
-6
-4 3 5 2 1 6
-2
-4
-2
-
-Output
-4 5 5 2 6
--1 0 -1 2 3 -1
-3
-
-🧪 Sample Test Case 3
-Input
-5
-9 8 7 6 5
-2
-6
-2
-
-Output
-9 8 7 6
--1 0 1 2 3
--1
+8
 
 ⚙️ Constraints
 1 ≤ N ≤ 2 × 10^5
@@ -103,12 +93,13 @@ Output
 1 ≤ K ≤ N
 1 ≤ D ≤ N
 
-⭐ Bonus Section (Optional)
+⭐ Bonus (Optional)
 
 Ensure the solution remains efficient for large input sizes
 
-Explain how the analysis would adapt if load values arrive continuously over time
+Explain how the analysis could be performed if load values arrive continuously
 
-Extend the design to support changing values of K without reprocessing the entire input
+Extend the design to support dynamic changes in K without full recomputation
 
 🏁 End of Problem
+✅
