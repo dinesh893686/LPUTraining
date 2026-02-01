@@ -698,3 +698,405 @@ public:
 Time increases → New Fleet
 
 Time decreases → Merge
+
+
+//////////////////
+Q. 1622. Clumsy Factorial
+The factorial of a positive integer n is the product of all positive integers less than or equal to n.
+
+For example, factorial(10) = 10 * 9 * 8 * 7 * 6 * 5 * 4 * 3 * 2 * 1.
+We make a clumsy factorial using the integers in decreasing order by swapping out the multiply operations for a fixed rotation of operations with multiply '*', divide '/', add '+', and subtract '-' in this order.
+
+For example, clumsy(10) = 10 * 9 / 8 + 7 - 6 * 5 / 4 + 3 - 2 * 1.
+However, these operations are still applied using the usual order of operations of arithmetic. We do all multiplication and division steps before any addition or subtraction steps, and multiplication and division steps are processed left to right.
+
+Additionally, the division that we use is floor division such that 10 * 9 / 8 = 90 / 8 = 11.
+
+Given an integer n, return the clumsy factorial of n.
+
+
+
+First: What problem are we trying to solve?
+
+We have an expression like:
+
+10 * 9 / 8 + 7 - 6 * 5 / 4 + 3 - 2 * 1
+
+
+And math rules say:
+
+* and / must be handled before + and -
+
+* and / go left to right
+
+This is exactly the kind of situation where a stack helps.
+
+🧸 Think of a stack like a pile of numbers
+
+A stack is just:
+
+You push numbers in
+
+You sometimes change the top number
+
+At the end, you add everything
+
+Nothing scary.
+
+🧸 The SIMPLE IDEA (core intuition)
+
+Start from n
+
+Go down to 1
+
+Apply operations one by one
+
+Use the stack to store partial results
+
+🧠 The Golden Rule (this makes everything click)
+
+When you see * or /
+👉 Immediately calculate with the top of the stack
+
+When you see + or -
+👉 Just push the number (positive or negative)
+
+Why?
+Because + and - are done later.
+
+🧩 Walkthrough with a stack (VERY important)
+
+Let’s do n = 5
+
+Operations order:
+
+*  /  +  -
+
+Step-by-step
+
+Start with:
+
+stack = []
+
+Number = 5 (first number)
+
+Push it:
+
+stack = [5]
+
+Next number = 4, operation = *
+
+Pop top → 5
+Compute:
+
+5 * 4 = 20
+
+
+Push result:
+
+stack = [20]
+
+Next number = 3, operation = /
+
+Pop top → 20
+Compute:
+
+20 / 3 = 6   (floor division)
+
+
+Push result:
+
+stack = [6]
+
+Next number = 2, operation = +
+
+Just push 2:
+
+stack = [6, 2]
+
+Next number = 1, operation = -
+
+Push -1:
+
+stack = [6, 2, -1]
+
+🧸 Final step: add everything
+6 + 2 - 1 = 7
+
+🎉 Final Answer
+clumsy(5) = 7
+
+🧠 WHY stack works (important)
+
+Stack helps because:
+
+* and / are handled immediately
+
++ and - are delayed
+
+At the end, adding everything respects math rules
+
+This avoids complex parsing.
+
+🧠 What if we don’t use a stack?
+
+You can do it without a stack, but:
+
+It becomes confusing
+
+Harder to get right
+
+Easier to make mistakes
+
+For beginners, stack = clarity.
+
+🧠 Final takeaway (remember this)
+
+When a problem has mixed operators and precedence,
+a stack helps control evaluation order.
+
+
+///
+
+Gray code problem
+
+
+
+
+What is this problem REALLY asking?
+
+You are given a number A.
+
+A = number of bits
+
+You must create a list of numbers
+
+These numbers must follow Gray Code rules
+
+The list must start with 0
+
+That’s all.
+
+🧸 Step 1: What is a “bit”?
+
+A bit can be only:
+
+0 or 1
+
+
+Examples:
+
+1 bit → 0, 1
+
+2 bits → 00, 01, 10, 11
+
+🧸 Step 2: What is Gray Code?
+
+Gray Code is a special ordering of binary numbers.
+
+The ONLY rule of Gray Code
+
+Two neighboring numbers must differ in exactly ONE bit
+
+Not zero bits
+Not two bits
+Exactly one bit
+
+🧸 Step 3: Smallest cases (to build intuition)
+Case A = 0
+
+No bits.
+
+Only one value exists:
+
+[0]
+
+Case A = 1
+
+1 bit.
+
+Possible values:
+
+0
+1
+
+
+Difference:
+
+0 → 1  (1 bit changed ✅)
+
+
+Gray Code:
+
+[0, 1]
+
+🧸 Step 4: Case A = 2 (important)
+
+2 bits → normally:
+
+00
+01
+10
+11
+
+
+But this is NOT Gray Code because:
+
+01 → 10  (2 bits changed ❌)
+
+✅ Correct Gray Code for A = 2
+00
+01
+11
+10
+
+
+Check carefully:
+
+00 → 01  (1 bit)
+01 → 11  (1 bit)
+11 → 10  (1 bit)
+
+
+Decimal form:
+
+[0, 1, 3, 2]
+
+🧠 Key Question: How do we build this systematically?
+
+This is the most important idea.
+
+🔥 The Core Idea (remember this)
+
+To build Gray Code for A bits:
+
+Take Gray Code for A − 1 bits
+
+Copy it
+
+Reverse the copied list
+
+Add 0 in front of each number in the original list
+
+Add 1 in front of each number in the reversed list
+
+Join both lists
+
+That’s it.
+
+🧸 Step-by-step example (A = 2)
+Gray Code for A = 1
+0
+1
+
+Prefix 0
+00
+01
+
+Reverse and prefix 1
+11
+10
+
+Final Gray Code (A = 2)
+00
+01
+11
+10
+
+🧸 Example (A = 3)
+Gray Code for A = 2
+00
+01
+11
+10
+
+Prefix 0
+000
+001
+011
+010
+
+Reverse and prefix 1
+110
+111
+101
+100
+
+Final Gray Code (A = 3)
+000
+001
+011
+010
+110
+111
+101
+100
+
+
+Decimal:
+
+[0, 1, 3, 2, 6, 7, 5, 4]
+
+🧠 Why does this always work?
+
+Because:
+
+The original list already follows the “one-bit difference” rule
+
+Reversing ensures the connection in the middle also differs by one bit
+
+Adding 0 and 1 changes only one new bit
+
+So the rule is never broken.
+
+🧠 What exactly do you need to return?
+
+Return the decimal values of the Gray Code sequence
+
+The sequence must start with 0
+
+✍️ Very simple solution (iterative, beginner-friendly)
+vector<int> grayCode(int A) {
+    vector<int> result;
+    result.push_back(0);
+
+    for (int i = 0; i < A; i++) {
+        int size = result.size();
+        for (int j = size - 1; j >= 0; j--) {
+            result.push_back(result[j] | (1 << i));
+        }
+    }
+    return result;
+}
+
+🧠 Read this slowly (what the code is doing)
+
+Start with [0]
+
+For every new bit:
+
+Copy the list in reverse
+
+Add a new bit to those numbers
+
+Append them
+
+This matches the explanation exactly.
+
+🧠 Final one-line takeaway (very important)
+
+Gray Code is built by mirroring the previous list and adding one new bit.
+
+If you understand this sentence, you understand the problem.
+
+If you want, next I can:
+
+Draw this with boxes and arrows
+
+Explain the code line by line
+
+Show a non-recursive mental trick
+
+Practice with custom examples
+
+Just tell me where you’re still confused 😊
