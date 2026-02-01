@@ -495,6 +495,8 @@ int allocateBooks(vector<int> arr, int n, int m) {
 //6. Painters Partition Problem
 https://www.naukri.com/code360/problems/painter's-partition-problem_1089557
 
+// Cow aggresive problem
+// https://www.naukri.com/code360/problems/aggressive-cows_1082150
 
 
 //Given a sorted array, find the element in the array which has minimum difference with the given number. .
@@ -638,6 +640,330 @@ Starting at bottom-left (n-1, 0) would work similarly but flipped directions.
 
 
 
+
+
+8 Koko loves to eat bananas. There are n piles of bananas, the ith pile has piles[i] bananas. The guards have gone and will come back in h hours.
+
+Koko can decide her bananas-per-hour eating speed of k. Each hour, she chooses some pile of bananas and eats k bananas from that pile. If the pile has less than k bananas, she eats all of them instead and will not eat any more bananas during this hour.
+
+Koko likes to eat slowly but still wants to finish eating all the bananas before the guards return.
+
+Return the minimum integer k such that she can eat all the bananas within h hours.
+
+
+
+9 Farmer John has built a new long barn, with N (2 ≤ N ≤ 100,000) stalls. The stalls are located along a straight line at positions x1 ... xN (0 ≤ xi ≤ 1,000,000,000).
+
+His C (2 ≤ C ≤ N) cows don't like this barn layout and become aggressive towards each other once put into a stall. To prevent the cows from hurting each other, FJ wants to assign the cows to the stalls, such that the minimum distance between any two of them is as large as possible. What is the largest minimum distance?
+
+5 3
+1
+2
+8
+4
+9
+
+3
+
+
+
+
+4 You are given an m x n integer matrix matrix with the following two properties:
+
+Each row is sorted in non-decreasing order.
+The first integer of each row is greater than the last integer of the previous row.
+Given an integer target, return true if target is in matrix or false otherwise.
+
+You must write a solution in O(log(m * n)) time complexity.
+
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        int top = 0;
+        int bot = matrix.size() - 1;
+
+        while (top <= bot) {
+            int mid = (top + bot) / 2;
+
+            if (matrix[mid][0] < target && matrix[mid][matrix[mid].size() - 1] > target) {
+                break;
+            } else if (matrix[mid][0] > target) {
+                bot = mid - 1;
+            } else {
+                top = mid + 1;
+            }
+        }
+
+        int row = (top + bot) / 2;
+
+        int left = 0;
+        int right = matrix[row].size() - 1;
+
+        while (left <= right) {
+            int mid = (left + right) / 2;
+
+            if (matrix[row][mid] == target) {
+                return true;
+            } else if (matrix[row][mid] > target) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+
+        return false;
+    }
+};
+
+
+
+
+
+
+Cows aggresive problem step by step solution
+
+This is the famous “Aggressive Cows” problem — a binary search on answer + greedy check classic.
+
+I’ll explain it step by step, very calmly, and connect each idea to the code you posted.
+
+🐄 Problem Restated in Simple Words
+
+You have:
+
+N stalls on a straight line (positions given)
+
+C cows to place
+
+Rules:
+
+Each cow goes into one stall
+
+Cows become aggressive if they are too close
+
+You want to maximize the minimum distance between any two cows
+
+👉 Output the largest possible minimum distance.
+
+📥 Example Input
+N = 5, C = 3
+Stalls: 1, 2, 8, 4, 9
+
+
+After sorting:
+
+[1, 2, 4, 8, 9]
+
+
+Output:
+
+3
+
+🧠 Core Insight (MOST IMPORTANT)
+
+We are not asked to place cows in all ways.
+
+We are asked:
+
+“What is the maximum minimum distance possible?”
+
+That means:
+
+We guess a distance
+
+Check if it’s possible
+
+Try to increase it
+
+This is why we use binary search on the answer.
+
+🎯 Step 1: Sort the stalls
+std::sort(stalls.begin(), stalls.end());
+
+
+Why?
+
+Distance only makes sense when stalls are in order
+
+Greedy placement depends on sorted positions
+
+Example:
+
+Before: 1 2 8 4 9
+After:  1 2 4 8 9
+
+🎯 Step 2: Define search space (Binary Search on Distance)
+long long low = 0;
+long long high = stalls[N - 1] - stalls[0];
+
+What do these mean?
+🔹 low = 0
+
+Minimum possible distance (theoretically)
+
+🔹 high = last stall - first stall
+
+Maximum possible distance (place cows at extreme ends)
+
+For example:
+
+high = 9 - 1 = 8
+
+
+So answer lies in:
+
+[0, 8]
+
+🎯 Step 3: Binary Search Loop
+while (low <= high) {
+    long long mid = low + (high - low) / 2;
+
+
+mid = a candidate minimum distance
+
+Now we ask:
+
+“Can I place all C cows such that each cow is at least mid distance apart?”
+
+🎯 Step 4: Greedy Check (canPlaceCows)
+
+This function answers:
+
+Is distance min_dist feasible?
+
+Code:
+bool canPlaceCows(long long min_dist,
+                  const vector<long long>& stalls,
+                  int C)
+
+🧠 Greedy Strategy
+
+Place first cow at first stall
+
+Always place next cow in the earliest possible stall
+
+Ensure distance ≥ min_dist
+
+Walkthrough of canPlaceCows
+int cowsPlaced = 1;
+long long lastCowPos = stalls[0];
+
+
+First cow placed at position 1
+
+for (size_t i = 1; i < stalls.size(); ++i) {
+
+
+Now we scan stalls from left to right.
+
+if (stalls[i] - lastCowPos >= min_dist) {
+    cowsPlaced++;
+    lastCowPos = stalls[i];
+}
+
+
+✔ If current stall is far enough → place cow
+
+if (cowsPlaced == C) {
+    return true;
+}
+
+
+✔ If all cows placed → distance is possible
+
+If loop ends and cows < C:
+
+return false;
+
+
+❌ Distance too large
+
+🧪 Example Dry Run
+
+Stalls:
+
+[1, 2, 4, 8, 9]
+C = 3
+
+Try mid = 3
+
+Place cows:
+
+Cow 1 → 1
+Cow 2 → 4 (distance = 3)
+Cow 3 → 8 (distance = 4)
+
+
+✔ Success → return true
+
+Try mid = 4
+Cow 1 → 1
+Cow 2 → 8 (distance = 7)
+Cow 3 → ❌ (no stall ≥ 4 away)
+
+
+❌ Fail → return false
+
+🎯 Step 5: Adjust Binary Search
+if (canPlaceCows(mid, stalls, C)) {
+    ans = mid;
+    low = mid + 1;   // try bigger distance
+} else {
+    high = mid - 1;  // try smaller distance
+}
+
+
+If possible → try to maximize
+
+If not → reduce distance
+
+🎯 Step 6: Final Answer
+std::cout << ans << std::endl;
+
+
+For given input:
+
+Answer = 3
+
+⏱ Time Complexity
+Step	Complexity
+Sorting	O(N log N)
+Binary Search	O(log(maxDistance))
+Feasibility Check	O(N)
+
+Total:
+
+O(N log N)
+
+
+✔ Works for N up to 100,000
+
+🧠 One-Line Intuition (Remember This)
+
+Guess the minimum distance → check greedily → binary search to maximize it.
+
+🔁 Pattern Recognition (VERY IMPORTANT)
+
+This same logic appears in:
+
+Painter’s Partition
+
+Book Allocation
+
+Shipping Packages
+
+Minimize Max Distance problems
+
+If you want next, I can:
+
+🔍 Dry run line-by-line with values
+
+🧠 Explain why greedy always works here
+
+✍️ Rewrite code in clean interview format
+
+📊 Compare with Book Allocation (same pattern!)
+
+Just tell me
 
 
 

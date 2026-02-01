@@ -594,3 +594,107 @@ int main()
 
 // Rain water trapping problem
 https://www.geeksforgeeks.org/problems/trapping-rain-water-1587115621/1
+
+
+// Car fleet
+
+CAR FLEET — SHORT & CLEAR SUMMARY
+🧠 Problem in One Line
+
+Cars move towards the same destination.
+Faster cars may catch slower cars in front, forming fleets.
+Once merged, they move together and never separate.
+👉 Count how many such fleets reach the destination.
+
+✅ Core Logic (Explain This to Student)
+
+Cars cannot overtake, only merge.
+
+Only cars behind can catch cars in front.
+
+So, sort cars by position in decreasing order (closest to target first).
+
+Convert each car’s movement into time to reach target.
+
+Traverse from front to back:
+
+If current car’s time ≤ time of fleet in front → it merges.
+
+If current car’s time > time of fleet in front → new fleet forms.
+
+Use a stack to store arrival times of fleets.
+
+Stack size at the end = number of fleets.
+
+🧱 Why Stack?
+
+We only compare with the latest fleet formed
+
+Fleets are formed in one direction
+
+Once merged, fleets never change
+
+👉 Stack naturally models this behavior.
+
+💻 FULLY COMMENTED C++ CODE (LINE-BY-LINE)
+class Solution {
+public:
+    int carFleet(int target, vector<int>& position, vector<int>& speed) {
+
+        int n = position.size();
+        // Number of cars
+
+        vector<pair<int, double>> cars;
+        // Each pair will store:
+        // first  -> position of car
+        // second -> time required to reach target
+
+        // Step 1: Calculate time for each car to reach the target
+        for (int i = 0; i < n; i++) {
+            double time = (double)(target - position[i]) / speed[i];
+            // Time = distance / speed
+
+            cars.push_back({position[i], time});
+            // Store position and time together
+        }
+
+        // Step 2: Sort cars by position in descending order
+        // (closest to target first)
+        sort(cars.begin(), cars.end(), greater<>());
+
+        stack<double> st;
+        // Stack will store time taken by each fleet
+
+        // Step 3: Process each car
+        for (int i = 0; i < n; i++) {
+
+            double currTime = cars[i].second;
+            // Time taken by current car to reach target
+
+            // If stack is empty OR
+            // current car cannot catch the fleet ahead
+            if (st.empty() || currTime > st.top()) {
+
+                // Current car forms a new fleet
+                st.push(currTime);
+            }
+            // Else:
+            // currTime <= st.top()
+            // means current car catches the fleet ahead
+            // so it merges and we do NOTHING
+        }
+
+        // Step 4: Number of fleets = stack size
+        return st.size();
+    }
+};
+
+🎯 One-Sentence Explanation for Students
+
+“Sort cars by position, convert each to time, and count how many times a slower car appears when moving from front to back.”
+
+🧠 Memory Trick
+
+Time increases → New Fleet
+
+Time decreases → Merge

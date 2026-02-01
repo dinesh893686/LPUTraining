@@ -1,0 +1,114 @@
+Machine Coding Round
+Smart System Load Analyzer
+
+Time Limit: 1 Hour
+Allowed Languages: C++ / Java / Python
+
+📌 Problem Statement
+
+A data center records CPU load values (integers) at regular time intervals.
+You are asked to analyze this sequence to derive meaningful insights about system behavior and stability.
+
+🔢 Input Description
+
+You are given:
+
+An integer N — the number of recorded load values
+
+A sequence of integers load[] of length N
+
+An integer K — a positive integer
+
+An integer T — a threshold value
+
+An integer D — a positive integer
+
+🎯 Required Output
+
+You must compute and output three results, in the order described below.
+
+Result 1
+
+Consider all possible consecutive segments of the input sequence having length K.
+For each such segment, determine a single representative value equal to the highest load observed within that segment.
+
+Output these representative values in the order in which the segments appear.
+
+Result 2
+
+For each position in the input sequence, identify the nearest earlier position where the recorded load is strictly greater than the load at the current position.
+
+If no such position exists, output -1 for that index.
+
+Result 3
+
+Using the sequence obtained in Result 1, determine the earliest position from which there exist at least D consecutive values that do not exceed the threshold T.
+
+If no such position exists, output -1.
+
+📥 Input Format
+N
+load[0] load[1] ... load[N-1]
+K
+T
+D
+
+📤 Output Format
+Line 1: Space-separated integers corresponding to Result 1
+Line 2: Space-separated integers corresponding to Result 2
+Line 3: A single integer corresponding to Result 3
+
+🧪 Sample Test Case 1
+Input
+8
+10 5 2 7 8 7 6 5
+3
+8
+2
+
+Output
+10 7 8 8 8 7
+-1 0 1 0 0 4 5 6
+2
+
+🧪 Sample Test Case 2
+Input
+6
+4 3 5 2 1 6
+2
+4
+2
+
+Output
+4 5 5 2 6
+-1 0 -1 2 3 -1
+3
+
+🧪 Sample Test Case 3
+Input
+5
+9 8 7 6 5
+2
+6
+2
+
+Output
+9 8 7 6
+-1 0 1 2 3
+-1
+
+⚙️ Constraints
+1 ≤ N ≤ 2 × 10^5
+1 ≤ load[i] ≤ 10^9
+1 ≤ K ≤ N
+1 ≤ D ≤ N
+
+⭐ Bonus Section (Optional)
+
+Ensure the solution remains efficient for large input sizes
+
+Explain how the analysis would adapt if load values arrive continuously over time
+
+Extend the design to support changing values of K without reprocessing the entire input
+
+🏁 End of Problem
