@@ -72,6 +72,7 @@ void postorder(node* root) {
 }
 
 void buildFromLevelOrder(node* &root) {
+
  }
 
 
@@ -668,7 +669,7 @@ public:
 };
 
 
-
+// Diagonal traversal of binary tree(homework
 
 // 13. https://www.geeksforgeeks.org/problems/sum-of-the-longest-bloodline-of-a-tree/1
 class Solution {
@@ -787,6 +788,50 @@ class Solution{
         return count;
     }
 };
+
+// optimize approch with prefix sum and unordered map
+class Solution {
+public:
+
+    void dfs(TreeNode* root, int k,
+             long long &count,
+             long long currSum,
+             unordered_map<long long,int> &prefix)
+    {
+        if (!root) return;
+
+        // update current prefix sum
+        currSum += root->val;
+
+        // check if there is a prefix that makes sum = k
+        long long want = currSum - k;
+        if (prefix.find(want) != prefix.end())
+            count += prefix[want];
+
+        // add current prefix into map
+        prefix[currSum]++;
+
+        // recurse left and right
+        dfs(root->left, k, count, currSum, prefix);
+        dfs(root->right, k, count, currSum, prefix);
+
+        // backtrack — remove this prefix
+        prefix[currSum]--;
+    }
+
+    int sumK(TreeNode* root, int k) {
+        unordered_map<long long,int> prefix;
+
+        // base case — prefix sum 0 happens once
+        prefix[0] = 1;
+
+        long long count = 0;
+        dfs(root, k, count, 0, prefix);
+
+        return (int)count;
+    }
+};
+
 
 //16. Kth Ancestor in a tree
 https://www.geeksforgeeks.org/problems/kth-ancestor-in-a-tree/1
