@@ -1,0 +1,284 @@
+DSA MASTER SHEET (GOOGLE DOC READY)
+DATA STRUCTURES & ALGORITHMS – COMPLETE PREPARATION SHEET
+TIME & SPACE COMPLEXITY
+Introduction
+
+Time Complexity = number of operations
+Space Complexity = extra memory used
+
+We don’t measure seconds. We measure growth.
+
+Growth Order (Best → Worst)
+
+O(1) – Constant
+O(log n) – Logarithmic
+O(n) – Linear
+O(n log n) – Log Linear
+O(n²) – Quadratic
+O(2ⁿ) – Exponential
+O(n!) – Factorial
+
+Asymptotic Notations
+
+Big O → Upper Bound (Worst Case)
+Omega → Lower Bound (Best Case)
+Theta → Tight Bound (Average)
+
+Analogy
+
+Big O → At most
+Omega → At least
+Theta → Usually
+
+Constant Time Example
+if(i==100) break;
+
+
+O(1)
+
+Linear
+for(i=0;i<n;i++)
+
+
+O(n)
+
+Quadratic
+for(i)
+ for(j)
+
+
+O(n²)
+
+Logarithmic (Binary Search)
+
+O(log n)
+
+Space Complexity
+
+Constant:
+
+int sum
+
+
+Linear:
+
+new array
+
+
+Tradeoff: Speed vs Memory.
+
+ARRAYS
+
+Kadane
+Minimum Cost to Move Chips
+Maximum Size Subarray Sum = K
+
+2D Matrix
+
+Rotate Matrix
+Spiral Traversal
+Set Matrix Zero
+Spiral Matrix III
+
+TWO POINTER
+
+2 Sum
+3 Sum
+Container With Most Water
+
+SLIDING WINDOW
+
+Longest Substring K Unique
+Sliding Window Maximum
+
+STACK
+
+Min Stack
+Reverse Stack
+Largest Rectangle Histogram
+Max Frequency Stack
+Car Fleet
+
+QUEUE / DEQUE
+
+Circular Queue
+Sliding Window Maximum
+
+Use cases:
+
+CPU scheduling
+Web servers
+Buffers
+Async jobs
+
+BINARY SEARCH
+
+Search Insert
+Single Element Sorted
+Lower Bound / Upper Bound
+Search Range
+Search Matrix
+Rotated Sorted Array
+Infinite Sorted Array
+
+Binary Search on Answer:
+
+Aggressive Cows
+Split Array Largest Sum
+Koko Eating Bananas
+
+LINKED LIST
+
+Reverse List
+Add Two Numbers
+Detect Cycle
+Copy Random Pointer
+LRU Cache
+Reverse Nodes K Group
+
+HEAP
+
+IPO
+Course Schedule III
+N Max Pair
+Heapify
+Insertion / Deletion
+
+GREEDY
+
+Candy
+Non Overlapping Interval
+Wiggle
+Couples Holding Hands
+
+TREES
+
+Balanced Tree
+Construct Tree
+Binary Tree Max Path
+Minimum Increments Leaf Paths
+K Sum Paths
+Lowest Common Ancestor
+Recover BST
+
+SPOJ:
+UCV2013J
+GCPC11J
+RTREE
+TREEDEGREE
+
+Codeforces:
+913B
+14D
+
+GRAPH
+
+Union Find
+0–1 BFS
+Multi Source BFS
+Escape Fire
+Cycle Detection
+
+Shortest Path:
+Cheapest Flights
+Second Minimum Time
+
+DYNAMIC PROGRAMMING
+
+AtCoder DP:
+
+A Frog
+C Vacation
+D Knapsack
+E Knapsack Value
+F LCS
+G Longest Path
+H Grid
+I Coins
+K Stones
+L Deque
+M Candies
+N Slimes
+O Matching
+P Independent Set
+
+Digit DP
+Subset DP
+
+RECURSION & BACKTRACKING
+
+Gray Code
+Palindrome Partition
+23 Game
+Unique Digits
+
+Tail Recursion
+
+BIT MANIPULATION
+
+Power of Two
+Swap via XOR
+XOR without XOR
+Alternate Bits
+
+MATH
+
+GCD
+Extended Euclid
+Modular Inverse
+Twin Primes
+Egyptian Fraction
+
+SYSTEM DESIGN BASICS
+
+Queues:
+
+CPU
+Keyboard buffer
+Web servers
+Message brokers
+
+IMPORTANT TREE LINKS
+
+https://www.spoj.com/problems/UCV2013J/
+
+https://codeforces.com/contest/913/problem/B
+
+https://leetcode.com/problems/minimum-increments-to-equalize-leaf-paths
+
+IMPORTANT DP LINKS
+
+https://www.interviewbit.com/problems/ways-to-form-max-heap/
+
+https://codeforces.com/blog/entry/67679
+
+IMPORTANT STACK LINKS
+
+Min Stack
+Largest Rectangle Histogram
+
+IMPORTANT GRAPH LINKS
+
+0-1 BFS
+Union Find
+Escape Fire
+
+IMPORTANT GREEDY
+
+Candy
+Wiggle
+Couples Holding Hands
+
+FINAL INTERVIEW PATTERNS
+
+Sliding Window
+Binary Search
+Two Pointer
+Stack
+Heap
+Greedy
+DP
+Graphs
+Trees
+
+END OF DOCUMENT
